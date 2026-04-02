@@ -7,7 +7,7 @@ Small static demo showing:
 - Checkpoint nodes with news/photo cards
 - A clean adapter point for NASA live data later
 
-## Run
+## Run locally
 
 Use a local static server so ES modules load correctly:
 
@@ -18,30 +18,38 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000`.
 
-## GitHub Pages
+## Deploy to GitHub Pages
 
-This repo is configured for GitHub Pages via GitHub Actions.
+The workflow file `.github/workflows/deploy-pages.yml` deploys the site automatically on every push to `main`.
 
-Live site:
+**First-time setup** (only needed once):
 
-- https://jackyko1991.github.io/Artemis-Tracker/
+1. Create the remote repository on GitHub (must be named `Artemis-Tracker` under `jackyko1991`):
 
-Expected remote:
+   ```bash
+   gh repo create jackyko1991/Artemis-Tracker --public
+   ```
 
-```bash
-git@github.com:jackyko1991/Artemis-Tracker.git
-```
+   Or create it manually at https://github.com/new.
 
-Workflow file:
+2. Initialise git and push:
 
-- `.github/workflows/deploy-pages.yml`
+   ```bash
+   git init
+   git remote add origin git@github.com:jackyko1991/Artemis-Tracker.git
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git push -u origin main
+   ```
 
-After the first push:
+3. Enable GitHub Pages in the repository settings:
+   - Go to **Settings → Pages**.
+   - Set **Source** to **GitHub Actions**.
 
-1. Open the GitHub repo settings.
-2. Go to `Pages`.
-3. Set `Source` to `GitHub Actions` if it is not already selected.
-4. Push to `main` to trigger deployment.
+4. The Actions workflow will run automatically and publish the site. Once it finishes the live URL will be:
+
+   https://jackyko1991.github.io/Artemis-Tracker/
 
 ## Current MVP Scope
 

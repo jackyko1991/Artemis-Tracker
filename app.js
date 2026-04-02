@@ -64,7 +64,7 @@ const EARTH_RADIUS_KM = 6371;
 const MOON_RADIUS_KM = 1737.4;
 const EARTH_MOON_DISTANCE_KM = 384400;
 const SCENE_EARTH_RADIUS = 2.4;
-const SCENE_MOON_DISTANCE = SCENE_EARTH_RADIUS * (EARTH_MOON_DISTANCE_KM / EARTH_RADIUS_KM);
+const SCENE_MOON_DISTANCE = SCENE_EARTH_RADIUS * 8; // Visually compressed (real ratio ~60x)
 const SCENE_MOON_RADIUS = SCENE_EARTH_RADIUS * (MOON_RADIUS_KM / EARTH_RADIUS_KM);
 const sceneCanvas = document.querySelector("#scene");
 const sceneError = document.querySelector("#scene-error");
@@ -238,18 +238,21 @@ function loadStl(loader, url) {
 }
 
 function createTrajectoryCurve() {
+  const D = SCENE_MOON_DISTANCE;
+  const R = SCENE_EARTH_RADIUS;
+  // Free-return trajectory: outbound arcs above the plane, swings past Moon, returns below
   const points = [
-    new THREE.Vector3(SCENE_EARTH_RADIUS * 1.06, 0, 0),
-    new THREE.Vector3(SCENE_MOON_DISTANCE * 0.1, SCENE_MOON_DISTANCE * 0.008, SCENE_MOON_DISTANCE * 0.004),
-    new THREE.Vector3(SCENE_MOON_DISTANCE * 0.24, SCENE_MOON_DISTANCE * 0.018, SCENE_MOON_DISTANCE * 0.008),
-    new THREE.Vector3(SCENE_MOON_DISTANCE * 0.42, SCENE_MOON_DISTANCE * 0.026, SCENE_MOON_DISTANCE * 0.01),
-    new THREE.Vector3(SCENE_MOON_DISTANCE * 0.64, SCENE_MOON_DISTANCE * 0.03, SCENE_MOON_DISTANCE * 0.006),
-    new THREE.Vector3(SCENE_MOON_DISTANCE * 0.86, SCENE_MOON_DISTANCE * 0.024, -SCENE_MOON_DISTANCE * 0.004),
-    new THREE.Vector3(SCENE_MOON_DISTANCE * 1.02, SCENE_MOON_DISTANCE * 0.014, -SCENE_MOON_DISTANCE * 0.012),
-    new THREE.Vector3(SCENE_MOON_DISTANCE * 0.9, -SCENE_MOON_DISTANCE * 0.008, -SCENE_MOON_DISTANCE * 0.026),
-    new THREE.Vector3(SCENE_MOON_DISTANCE * 0.66, -SCENE_MOON_DISTANCE * 0.02, -SCENE_MOON_DISTANCE * 0.032),
-    new THREE.Vector3(SCENE_MOON_DISTANCE * 0.4, -SCENE_MOON_DISTANCE * 0.022, -SCENE_MOON_DISTANCE * 0.024),
-    new THREE.Vector3(SCENE_MOON_DISTANCE * 0.2, -SCENE_MOON_DISTANCE * 0.016, -SCENE_MOON_DISTANCE * 0.014)
+    new THREE.Vector3(R * 1.08, 0, 0),
+    new THREE.Vector3(D * 0.14, D * 0.10, D * 0.04),
+    new THREE.Vector3(D * 0.30, D * 0.18, D * 0.06),
+    new THREE.Vector3(D * 0.50, D * 0.22, D * 0.05),
+    new THREE.Vector3(D * 0.70, D * 0.17, D * 0.01),
+    new THREE.Vector3(D * 0.88, D * 0.08, -D * 0.04),
+    new THREE.Vector3(D * 1.02, D * 0.01, -D * 0.07),
+    new THREE.Vector3(D * 0.90, -D * 0.08, -D * 0.11),
+    new THREE.Vector3(D * 0.68, -D * 0.17, -D * 0.13),
+    new THREE.Vector3(D * 0.44, -D * 0.20, -D * 0.11),
+    new THREE.Vector3(D * 0.20, -D * 0.14, -D * 0.07)
   ];
   return new THREE.CatmullRomCurve3(points, false, "centripetal", 0.12);
 }
@@ -404,14 +407,14 @@ async function initScene() {
   renderer.toneMappingExposure = 1.28;
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x03070d, 0.008);
+  scene.fog = new THREE.FogExp2(0x03070d, 0.0008);
 
   const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 200);
   camera.position.set(0, 9, 26);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-  controls.minDistance = 10;
+  controls.minDistance = 4;
   controls.maxDistance = SCENE_MOON_DISTANCE * 3;
 
   const ambient = new THREE.AmbientLight(0xffffff, 1.35);
@@ -649,8 +652,11 @@ async function initScene() {
     const progress = getMissionProgress(nowMs);
     const shipPoint = trajectoryCurve.getPoint(progress);
     const nextPoint = trajectoryCurve.getPoint(Math.min(progress + 0.01, 0.99));
+    const numCompleted = Math.max(8, Math.floor(220 * progress));
     const completedCurve = new THREE.CatmullRomCurve3(
-      trajectoryCurve.getPoints(Math.max(8, Math.floor(220 * progress))),
+      Array.from({ length: numCompleted + 1 }, (_, i) =>
+        trajectoryCurve.getPoint((progress * i) / numCompleted)
+      ),
       false,
       "centripetal",
       0.12
