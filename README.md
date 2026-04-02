@@ -22,6 +22,10 @@ Then open `http://localhost:8000`.
 
 This repo is configured for GitHub Pages via GitHub Actions.
 
+Live site:
+
+- https://jackyko1991.github.io/Artemis-Tracker/
+
 Expected remote:
 
 ```bash
