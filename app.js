@@ -228,6 +228,9 @@ function closeNewsModal() {
   newsModal.style.display = "none";
 }
 
+// True when the primary input is touch (no fine hover capability)
+const isTouchPrimary = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
 function renderCheckpointList() {
   checkpointList.innerHTML = "";
   missionData.checkpoints.slice().reverse().forEach((checkpoint) => {
@@ -237,25 +240,41 @@ function renderCheckpointList() {
     const button = document.createElement("button");
     button.dataset.id = checkpoint.id;
     button.innerHTML = `<strong>${checkpoint.label}</strong><span>${new Date(checkpoint.time).toUTCString()}</span>`;
-    button.addEventListener("click", () => {
-      setDetail(checkpoint.id);
-      if (focusCheckpoint) {
-        focusCheckpoint(checkpoint.id);
-      }
-      if (checkpoint.sourceUrl) {
-        window.open(checkpoint.sourceUrl, "_blank", "noopener,noreferrer");
-      }
-    });
-    button.addEventListener("mouseenter", () => {
-      setDetail(checkpoint.id);
-      openNewsModalAt(checkpoint.id, button);
-    });
-    button.addEventListener("focus", () => {
-      setDetail(checkpoint.id);
-      openNewsModalAt(checkpoint.id, button);
-    });
-    button.addEventListener("mouseleave", closeNewsModal);
-    button.addEventListener("blur", closeNewsModal);
+
+    if (isTouchPrimary) {
+      // Touch: tap once to show card, tap modal to dismiss (no URL auto-open)
+      button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setDetail(checkpoint.id);
+        if (focusCheckpoint) focusCheckpoint(checkpoint.id);
+        const isOpen = !newsModal.hasAttribute("hidden") &&
+          document.querySelector("#news-title").textContent === checkpoint.label;
+        if (isOpen) {
+          closeNewsModal();
+        } else {
+          openNewsModalAt(checkpoint.id, button);
+        }
+      });
+    } else {
+      // Desktop: hover shows card, click opens NASA source
+      button.addEventListener("click", () => {
+        setDetail(checkpoint.id);
+        if (focusCheckpoint) focusCheckpoint(checkpoint.id);
+        if (checkpoint.sourceUrl) {
+          window.open(checkpoint.sourceUrl, "_blank", "noopener,noreferrer");
+        }
+      });
+      button.addEventListener("mouseenter", () => {
+        setDetail(checkpoint.id);
+        openNewsModalAt(checkpoint.id, button);
+      });
+      button.addEventListener("mouseleave", closeNewsModal);
+      button.addEventListener("focus", () => {
+        setDetail(checkpoint.id);
+        openNewsModalAt(checkpoint.id, button);
+      });
+      button.addEventListener("blur", closeNewsModal);
+    }
 
     item.appendChild(button);
     checkpointList.appendChild(item);
