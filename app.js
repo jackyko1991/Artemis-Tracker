@@ -133,41 +133,20 @@ function getVelocityKmH(progress) {
 }
 
 async function fetchHorizonsTrajectory() {
-  const url = "https://ssd.jpl.nasa.gov/api/horizons.api?format=json" +
-    "&COMMAND='-1024'&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=VECTORS" +
-    "&CENTER='500@399'&START_TIME='2026-Apr-02+02:00'&STOP_TIME='2026-Apr-11+00:01'" +
-    "&STEP_SIZE='3h'&VEC_TABLE=2&CSV_FORMAT=YES";
-  const response = await fetchWithTimeout(url, 12000);
-  if (!response.ok) throw new Error(`HORIZONS ${response.status}`);
+  // Load from bundled local file — no CORS issues, no API rate limits.
+  // Data pre-fetched from NASA JPL HORIZONS (spacecraft -1024, 3-hour step).
+  // Re-run `scripts/update_trajectory.sh` to refresh when a new solution is published.
+  const response = await fetchWithTimeout("./trajectory.json", 8000);
+  if (!response.ok) throw new Error(`trajectory.json load failed: ${response.status}`);
   const json = await response.json();
-  return parseHorizonsVectors(json.result);
+  const scale = SCENE_MOON_DISTANCE / KM_SCALE;
+  return json.points.map(p => ({
+    timeMs: p.timeMs,
+    pos: new THREE.Vector3(p.x * scale, p.z * scale, p.y * scale),
+    speedKmH: p.speedKmH
+  }));
 }
 
-function parseHorizonsVectors(text) {
-  const soeIdx = text.indexOf("$$SOE");
-  const eoeIdx = text.indexOf("$$EOE");
-  if (soeIdx === -1 || eoeIdx === -1) throw new Error("No HORIZONS data block");
-  const lines = text.slice(soeIdx + 5, eoeIdx).trim().split("\n").filter(l => l.trim());
-  const points = [];
-  const scale = SCENE_MOON_DISTANCE / KM_SCALE;
-  for (const line of lines) {
-    const p = line.split(",").map(s => s.trim());
-    if (p.length < 8) continue;
-    const jd = parseFloat(p[0]);
-    const x = parseFloat(p[2]), y = parseFloat(p[3]), z = parseFloat(p[4]);
-    const vx = parseFloat(p[5]), vy = parseFloat(p[6]), vz = parseFloat(p[7]);
-    if (!isFinite(x) || !isFinite(y) || !isFinite(z)) continue;
-    // JD → Unix ms; axis swap: EME2000 (X,Y,Z) → scene (X, Z, Y) so north pole = scene-Y
-    const timeMs = (jd - 2440587.5) * 86400000;
-    points.push({
-      timeMs,
-      pos: new THREE.Vector3(x * scale, z * scale, y * scale),
-      speedKmH: Math.sqrt(vx*vx + vy*vy + vz*vz) * 3600
-    });
-  }
-  if (points.length < 4) throw new Error("Insufficient HORIZONS points");
-  return points;
-}
 
 function horizonsProgress(data, nowMs) {
   const t0 = data[0].timeMs, t1 = data[data.length - 1].timeMs;
@@ -1002,17 +981,16 @@ document.querySelector("#about-btn").addEventListener("click", (e) => {
   btn.textContent = opening ? "What is this? ▴" : "What is this? ▾";
 });
 
-// Fetch HORIZONS trajectory first (real spacecraft positions), fall back to synthetic
+// Load bundled HORIZONS trajectory (pre-fetched from NASA JPL, no CORS issues)
 let horizonsData = null;
 try {
   horizonsData = await fetchHorizonsTrajectory();
-  console.log(`HORIZONS: loaded ${horizonsData.length} trajectory points`);
   document.querySelector("#data-source-badge").textContent =
-    `Trajectory: NASA JPL HORIZONS · ${horizonsData.length} pts · 3 h resolution · loaded on startup`;
+    `Trajectory: NASA JPL HORIZONS · ${horizonsData.length} pts · 3 h resolution`;
 } catch (err) {
-  console.warn("HORIZONS unavailable, using synthetic trajectory:", err.message);
+  console.error("trajectory.json failed to load:", err.message);
   document.querySelector("#data-source-badge").textContent =
-    "Trajectory: synthetic approximation (HORIZONS unavailable)";
+    "Trajectory: data unavailable";
 }
 
 try {
