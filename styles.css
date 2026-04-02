@@ -222,6 +222,7 @@ body {
   box-shadow: var(--shadow);
   pointer-events: none;
   min-width: 200px;
+  max-width: 300px;
 }
 
 .orion-card[hidden] { display: none; }

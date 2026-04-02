@@ -750,6 +750,25 @@ async function initScene() {
   }
 
   const orionCard = document.querySelector("#orion-card");
+  const nodeCard  = document.querySelector("#node-card");
+
+  function showNodeCard(checkpointId, clientX, clientY) {
+    const cp = getCheckpoint(checkpointId);
+    if (!cp) return;
+    const isFuture = cp.progress > getMissionProgress(getSceneTimeMs());
+    nodeCard.innerHTML = `
+      <p class="eyebrow">${isFuture ? "Upcoming" : "Completed"}</p>
+      <strong style="display:block;margin:4px 0 2px">${cp.label}</strong>
+      <span style="font-size:0.82rem;color:var(--muted)">${new Date(cp.time).toUTCString()}</span>
+      <p style="margin:8px 0 0;font-size:0.88rem;line-height:1.45">${cp.summary}</p>`;
+    nodeCard.style.left = `${clientX + 16}px`;
+    nodeCard.style.top  = `${clientY - 10}px`;
+    nodeCard.hidden = false;
+  }
+
+  function hideNodeCard() {
+    nodeCard.hidden = true;
+  }
 
   function showOrionCard(clientX, clientY) {
     const ae = metricDistanceAE.textContent;
@@ -808,19 +827,14 @@ async function initScene() {
     const intersects = raycaster.intersectObjects(checkpointMeshes);
     if (intersects.length > 0) {
       const checkpointId = intersects[0].object.userData.checkpointId;
-      if (checkpointId !== hoveredCheckpointId) {
-        hoveredCheckpointId = checkpointId;
-        setDetail(checkpointId);
-        const fakeAnchor = {
-          getBoundingClientRect: () => ({ left: clientX, right: clientX, top: clientY })
-        };
-        openNewsModalAt(checkpointId, fakeAnchor);
-        renderer.domElement.style.cursor = "pointer";
-      }
+      hoveredCheckpointId = checkpointId;
+      setDetail(checkpointId);
+      showNodeCard(checkpointId, clientX, clientY);
+      renderer.domElement.style.cursor = "pointer";
     } else {
       if (hoveredCheckpointId !== null) {
         hoveredCheckpointId = null;
-        closeNewsModal();
+        hideNodeCard();
         renderer.domElement.style.cursor = "";
       }
     }
