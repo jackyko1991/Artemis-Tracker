@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artemis Flight Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Live Mission View</p>
+        <h1>Artemis Flight Tracker</h1>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="viewer-panel">
+        <canvas id="scene"></canvas>
+        <div class="viewer-overlay">
+          <div class="legend">
+            <span><i class="legend-earth"></i>Earth</span>
+            <span><i class="legend-moon"></i>Moon</span>
+            <span><i class="legend-ship"></i>Artemis</span>
+            <span><i class="legend-track-live"></i>Flown</span>
+            <span><i class="legend-track-plan"></i>Planned</span>
+            <span><i class="legend-node"></i>Checkpoint</span>
+          </div>
+          <div class="viewer-actions">
+            <button id="fit-screen" class="ghost-button">Fit Screen</button>
+            <button id="playback-toggle" class="ghost-button">Pause Motion</button>
+          </div>
+        </div>
+        <div id="scene-error" class="scene-error" hidden></div>
+      </section>
+
+      <aside class="sidebar">
+        <section class="panel mission-panel">
+          <p class="eyebrow">Mission Snapshot</p>
+          <div class="metrics">
+            <div>
+              <span class="metric-label">Earth to Moon</span>
+              <strong id="metric-distance-em">384,400 km</strong>
+            </div>
+            <div>
+              <span class="metric-label">Artemis Distance from Earth</span>
+              <strong id="metric-distance-ae">Loading</strong>
+            </div>
+            <div>
+              <span class="metric-label">Artemis Distance from Moon</span>
+              <strong id="metric-distance-am">Loading</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel feed-panel">
+          <p class="eyebrow">Mission Nodes and Live News</p>
+          <ul id="checkpoint-list" class="checkpoint-list"></ul>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div id="news-modal" class="news-modal" hidden>
+    <div class="news-backdrop"></div>
+    <section class="news-dialog" aria-labelledby="news-title">
+      <p class="eyebrow">Live News</p>
+      <h2 id="news-title">Launch</h2>
+      <p id="news-time" class="detail-time"></p>
+      <img id="news-image" class="detail-image" src="" alt="Mission news image">
+      <p id="news-summary" class="detail-summary"></p>
+      <a id="news-link" class="detail-link" href="#" target="_blank" rel="noreferrer">Open NASA source</a>
+    </section>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
