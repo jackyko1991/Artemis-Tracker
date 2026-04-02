@@ -132,6 +132,66 @@ function getVelocityKmH(progress) {
   return 0;
 }
 
+async function fetchHorizonsTrajectory() {
+  const url = "https://ssd.jpl.nasa.gov/api/horizons.api?format=json" +
+    "&COMMAND='-1024'&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=VECTORS" +
+    "&CENTER='500@399'&START_TIME='2026-Apr-02+02:00'&STOP_TIME='2026-Apr-11+00:01'" +
+    "&STEP_SIZE='3h'&VEC_TABLE=2&CSV_FORMAT=YES";
+  const response = await fetchWithTimeout(url, 12000);
+  if (!response.ok) throw new Error(`HORIZONS ${response.status}`);
+  const json = await response.json();
+  return parseHorizonsVectors(json.result);
+}
+
+function parseHorizonsVectors(text) {
+  const soeIdx = text.indexOf("$$SOE");
+  const eoeIdx = text.indexOf("$$EOE");
+  if (soeIdx === -1 || eoeIdx === -1) throw new Error("No HORIZONS data block");
+  const lines = text.slice(soeIdx + 5, eoeIdx).trim().split("\n").filter(l => l.trim());
+  const points = [];
+  const scale = SCENE_MOON_DISTANCE / KM_SCALE;
+  for (const line of lines) {
+    const p = line.split(",").map(s => s.trim());
+    if (p.length < 8) continue;
+    const jd = parseFloat(p[0]);
+    const x = parseFloat(p[2]), y = parseFloat(p[3]), z = parseFloat(p[4]);
+    const vx = parseFloat(p[5]), vy = parseFloat(p[6]), vz = parseFloat(p[7]);
+    if (!isFinite(x) || !isFinite(y) || !isFinite(z)) continue;
+    // JD → Unix ms; axis swap: EME2000 (X,Y,Z) → scene (X, Z, Y) so north pole = scene-Y
+    const timeMs = (jd - 2440587.5) * 86400000;
+    points.push({
+      timeMs,
+      pos: new THREE.Vector3(x * scale, z * scale, y * scale),
+      speedKmH: Math.sqrt(vx*vx + vy*vy + vz*vz) * 3600
+    });
+  }
+  if (points.length < 4) throw new Error("Insufficient HORIZONS points");
+  return points;
+}
+
+function horizonsProgress(data, nowMs) {
+  const t0 = data[0].timeMs, t1 = data[data.length - 1].timeMs;
+  return THREE.MathUtils.clamp((nowMs - t0) / (t1 - t0), 0, 1);
+}
+
+function horizonsLookup(data, nowMs) {
+  if (nowMs <= data[0].timeMs) return { pos: data[0].pos.clone(), speedKmH: data[0].speedKmH };
+  if (nowMs >= data[data.length - 1].timeMs) {
+    const last = data[data.length - 1];
+    return { pos: last.pos.clone(), speedKmH: last.speedKmH };
+  }
+  for (let i = 0; i < data.length - 1; i++) {
+    if (nowMs >= data[i].timeMs && nowMs < data[i + 1].timeMs) {
+      const f = (nowMs - data[i].timeMs) / (data[i + 1].timeMs - data[i].timeMs);
+      return {
+        pos: new THREE.Vector3().lerpVectors(data[i].pos, data[i + 1].pos, f),
+        speedKmH: data[i].speedKmH + (data[i + 1].speedKmH - data[i].speedKmH) * f
+      };
+    }
+  }
+  return { pos: data[data.length - 1].pos.clone(), speedKmH: data[data.length - 1].speedKmH };
+}
+
 function getCheckpoint(checkpointId) {
   return missionData.checkpoints.find((item) => item.id === checkpointId);
 }
@@ -379,7 +439,7 @@ function createTrajectoryCurve() {
   return new THREE.CatmullRomCurve3(points, false, "centripetal", 0.12);
 }
 
-function updateMetrics(earth, moon, spacecraft, progress) {
+function updateMetrics(earth, moon, spacecraft, progress, liveSpeedKmH = null) {
   const earthPos = earth.getWorldPosition(new THREE.Vector3());
   const moonPos = moon.getWorldPosition(new THREE.Vector3());
   const shipPos = spacecraft.getWorldPosition(new THREE.Vector3());
@@ -387,7 +447,7 @@ function updateMetrics(earth, moon, spacecraft, progress) {
   metricDistanceAE.textContent = formatKm(earthPos.distanceTo(shipPos) / SCENE_MOON_DISTANCE * KM_SCALE);
   metricDistanceAM.textContent = formatKm(moonPos.distanceTo(shipPos) / SCENE_MOON_DISTANCE * KM_SCALE);
 
-  const speedKmH = getVelocityKmH(progress);
+  const speedKmH = liveSpeedKmH !== null ? liveSpeedKmH : getVelocityKmH(progress);
   metricSpeed.textContent = `${speedKmH.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km/h`;
 }
 
@@ -527,7 +587,7 @@ async function hydrateMissionData() {
 }
 
 
-async function initScene() {
+async function initScene(horizonsData = null) {
   const renderer = new THREE.WebGLRenderer({ canvas: sceneCanvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -624,7 +684,12 @@ async function initScene() {
   moonOrbitLine.computeLineDistances();
   scene.add(moonOrbitLine);
 
-  const trajectoryCurve = createTrajectoryCurve();
+  let trajectoryCurve = createTrajectoryCurve();
+  // If real HORIZONS data loaded, override with real positions
+  if (horizonsData) {
+    const realPoints = horizonsData.map(p => p.pos);
+    trajectoryCurve = new THREE.CatmullRomCurve3(realPoints, false, "centripetal", 0.1);
+  }
   const trajectoryRadius = Math.max(0.075, SCENE_EARTH_RADIUS * 0.028);
   let liveTrajectoryGeometry = new THREE.TubeGeometry(
     trajectoryCurve,
@@ -859,8 +924,9 @@ async function initScene() {
     keyLight.position.copy(solarDirection).multiplyScalar(42);
     fillLight.position.copy(solarDirection).multiplyScalar(-18).add(new THREE.Vector3(-4, 3, 0));
 
-    const progress = getMissionProgress(nowMs);
-    const shipPoint = trajectoryCurve.getPoint(progress);
+    const progress = horizonsData ? horizonsProgress(horizonsData, nowMs) : getMissionProgress(nowMs);
+    const horizonsLive = horizonsData ? horizonsLookup(horizonsData, nowMs) : null;
+    const shipPoint = horizonsLive ? horizonsLive.pos : trajectoryCurve.getPoint(progress);
     const nextPoint = trajectoryCurve.getPoint(Math.min(progress + 0.01, 0.99));
     const numCompleted = Math.max(8, Math.floor(220 * progress));
     const completedCurve = new THREE.CatmullRomCurve3(
@@ -912,7 +978,7 @@ async function initScene() {
     refreshCheckpointListState(progress);
 
     controls.update();
-    updateMetrics(earth, moon, spacecraft, progress);
+    updateMetrics(earth, moon, spacecraft, progress, horizonsLive?.speedKmH ?? null);
     if (orionHovered) showOrionCard(lastOrionClient.x, lastOrionClient.y);
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
@@ -936,11 +1002,23 @@ document.querySelector("#about-btn").addEventListener("click", (e) => {
   btn.textContent = opening ? "What is this? ▴" : "What is this? ▾";
 });
 
-// Start scene immediately with default data — don't block on network requests
+// Fetch HORIZONS trajectory first (real spacecraft positions), fall back to synthetic
+let horizonsData = null;
+try {
+  horizonsData = await fetchHorizonsTrajectory();
+  console.log(`HORIZONS: loaded ${horizonsData.length} trajectory points`);
+  document.querySelector("#data-source-badge").textContent =
+    `Trajectory: NASA JPL HORIZONS · ${horizonsData.length} pts · 3 h resolution · loaded on startup`;
+} catch (err) {
+  console.warn("HORIZONS unavailable, using synthetic trajectory:", err.message);
+  document.querySelector("#data-source-badge").textContent =
+    "Trajectory: synthetic approximation (HORIZONS unavailable)";
+}
+
 try {
   renderCheckpointList();
   setDetail(selectedCheckpointId);
-  await initScene();
+  await initScene(horizonsData);
 } catch (error) {
   console.error(error);
   showSceneError(error);
@@ -948,7 +1026,6 @@ try {
   metricDistanceAM.textContent = "Unavailable";
 }
 
-// Hydrate live data in the background; refresh checkpoint list when it arrives
 hydrateMissionData().then(() => {
   renderCheckpointList();
   setDetail(selectedCheckpointId);

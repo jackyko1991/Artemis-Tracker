@@ -197,6 +197,16 @@ body {
   pointer-events: auto;
 }
 
+.data-badge {
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(3, 7, 13, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
 .scene-error {
   position: absolute;
   top: 16px;
