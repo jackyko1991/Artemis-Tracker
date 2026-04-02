@@ -180,11 +180,13 @@ function openNewsModalAt(checkpointId, anchorElement = null) {
     newsModal.style.width = "";
   }
 
-  newsModal.hidden = false;
+  newsModal.removeAttribute("hidden");
+  newsModal.style.display = "block";
 }
 
 function closeNewsModal() {
-  newsModal.hidden = true;
+  newsModal.setAttribute("hidden", "");
+  newsModal.style.display = "none";
 }
 
 function renderCheckpointList() {
@@ -323,7 +325,7 @@ function createFadingPlannedTube(curve, tubularSegments, radius, radialSegments)
   const ringCount = radialSegments + 1;
   const colors = new Float32Array((tubularSegments + 1) * ringCount * 3);
   for (let i = 0; i <= tubularSegments; i++) {
-    const fade = Math.pow(1.0 - i / tubularSegments, 1.4); // bright at Orion end, invisible at Earth end
+    const fade = 0.22 + 0.78 * Math.pow(1.0 - i / tubularSegments, 1.4); // bright at Orion end, dimmer at Earth end
     for (let j = 0; j < ringCount; j++) {
       const idx = (i * ringCount + j) * 3;
       colors[idx]     = 0.56 * fade;
@@ -372,7 +374,7 @@ function createTrajectoryCurve() {
     new THREE.Vector3( D * 0.74, -0.20, -D * 0.06), // post-flyby
     new THREE.Vector3( D * 0.50, -0.45, -D * 0.14), // mid return
     new THREE.Vector3( D * 0.22, -0.50, -D * 0.18), // late return
-    new THREE.Vector3( R * 1.6,  -0.15, -D * 0.10), // Earth arrival — re-entry approach
+    new THREE.Vector3( R * 1.12, -0.08, -D * 0.05), // Earth arrival — re-entry, near Earth
   ];
   return new THREE.CatmullRomCurve3(points, false, "centripetal", 0.12);
 }
@@ -773,6 +775,7 @@ async function initScene() {
 
   let hoveredCheckpointId = null;
   let orionHovered = false;
+  let lastOrionClient = { x: 0, y: 0 };
 
   function onPointerMove(event) {
     const { x, y, clientX, clientY } = getCanvasPointer(event);
@@ -791,6 +794,7 @@ async function initScene() {
         closeNewsModal();
         renderer.domElement.style.cursor = "crosshair";
       }
+      lastOrionClient = { x: clientX, y: clientY };
       showOrionCard(clientX, clientY);
       return;
     }
@@ -895,6 +899,7 @@ async function initScene() {
 
     controls.update();
     updateMetrics(earth, moon, spacecraft, progress);
+    if (orionHovered) showOrionCard(lastOrionClient.x, lastOrionClient.y);
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }

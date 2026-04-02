@@ -41,7 +41,7 @@
             <li>Entry speed: <strong>~40,000 km/h</strong> — heat shield to 2,760 °C</li>
           </ul>
           <h3>Data sources</h3>
-          <p>Live updates from the <a class="detail-link" href="https://www.nasa.gov/missions/artemis/" target="_blank" rel="noreferrer">NASA Artemis news feed</a>. Images from the <a class="detail-link" href="https://images.nasa.gov" target="_blank" rel="noreferrer">NASA Images API</a>. No API key required — set <code>NASA_API_KEY</code> in <code>app.js</code> for higher rate limits (<a class="detail-link" href="https://api.nasa.gov" target="_blank" rel="noreferrer">get a free key</a>).</p>
+          <p>Live updates from the <a class="detail-link" href="https://www.nasa.gov/missions/artemis/" target="_blank" rel="noreferrer">NASA Artemis news feed</a>. Images from the <a class="detail-link" href="https://images.nasa.gov" target="_blank" rel="noreferrer">NASA Images API</a>. </p>
           <p class="about-note">Trajectory is a stylised approximation. Checkpoint times and distances are real NASA mission data.</p>
         </div>
       </div>
@@ -51,15 +51,6 @@
       <section class="viewer-panel">
         <canvas id="scene"></canvas>
         <div class="viewer-overlay">
-          <div class="legend">
-            <span><i class="legend-earth"></i>Earth</span>
-            <span><i class="legend-moon"></i>Moon</span>
-            <span><i class="legend-orbit"></i>Moon Orbit</span>
-            <span><i class="legend-ship"></i>Orion</span>
-            <span><i class="legend-track-live"></i>Flown</span>
-            <span><i class="legend-track-plan"></i>Planned</span>
-            <span><i class="legend-node"></i>Checkpoint</span>
-          </div>
           <div class="viewer-actions">
             <button id="fit-screen" class="ghost-button">Fit Screen</button>
           </div>
