@@ -443,11 +443,13 @@ body {
 @media (max-width: 1200px) {
   .news-modal {
     position: fixed;
-    width: 100%;
+    width: calc(100% - 32px);
     left: 16px;
     right: 16px;
     top: auto;
     bottom: 16px;
+    pointer-events: auto;
+    cursor: pointer;
   }
 
   .news-dialog {
@@ -472,7 +474,19 @@ body {
   }
 
   .topbar {
-    flex-direction: column;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .topbar > div:first-child {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .topbar h1 {
+    white-space: normal;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
   }
 
   .layout {

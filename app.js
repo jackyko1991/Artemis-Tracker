@@ -966,6 +966,9 @@ async function initScene(horizonsData = null) {
   animate();
 }
 
+// Tap news modal on mobile to dismiss
+newsModal.addEventListener("click", closeNewsModal);
+
 document.querySelector("#about-btn").addEventListener("click", (e) => {
   e.stopPropagation();
   const panel = document.querySelector("#about-panel");
