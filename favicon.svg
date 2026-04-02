@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Background -->
+  <rect width="64" height="64" rx="10" fill="#fafafa"/>
+
+  <!-- Blue horizon arc -->
+  <path d="M 4,61 Q 32,48 60,61"
+        stroke="#3ab4f6" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- Red orbital swoosh — thick body sweeping from lower-left around the A -->
+  <path d="M 9,54 C -3,30 4,8 26,7"
+        stroke="#c0202c" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+  <!-- thin tail curving toward the Moon -->
+  <path d="M 26,7 C 33,5 40,9 44,16"
+        stroke="#c0202c" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- Moon — grey circle; drawn before A so the right leg partially overlaps it -->
+  <circle cx="43" cy="15" r="7" fill="#929a98"/>
+
+  <!-- "A" outer polygon -->
+  <polygon points="32,8 56,58 47,58 37,34 27,34 17,58 8,58" fill="#111111"/>
+
+  <!-- Inner eye cutout — white triangle removes the solid fill above the crossbar -->
+  <polygon points="32,16 37,34 27,34" fill="#fafafa"/>
+</svg>

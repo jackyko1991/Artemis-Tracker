@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Artemis Flight Tracker</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -16,6 +17,34 @@
         <p class="eyebrow">Live Mission View</p>
         <h1>Artemis Flight Tracker</h1>
       </div>
+      <div class="about-block">
+        <button id="about-btn" class="ghost-button about-btn">What is this? ▾</button>
+        <div id="about-panel" class="about-panel" hidden>
+          <h3>Artemis II</h3>
+          <p>Artemis II is the first crewed flight of NASA's SLS rocket and Orion spacecraft — the first humans bound for deep space since Apollo 17 in 1972. Four astronauts confirm all spacecraft systems work in the deep-space environment before Artemis III attempts a lunar landing.</p>
+          <h3>Crew</h3>
+          <ul>
+            <li><strong>Reid Wiseman</strong> — Commander (NASA)</li>
+            <li><strong>Victor Glover</strong> — Pilot (NASA)</li>
+            <li><strong>Christina Koch</strong> — Mission Specialist (NASA)</li>
+            <li><strong>Jeremy Hansen</strong> — Mission Specialist (CSA)</li>
+          </ul>
+          <h3>Free-return trajectory</h3>
+          <img src="https://www.nasa.gov/wp-content/uploads/2023/03/artemis_2_map_october_2021.jpg" alt="Artemis II trajectory map" class="about-map">
+          <p>After launch from Kennedy Space Center, a Translunar Injection (TLI) burn sends Orion onto a <strong>free-return path</strong>. No lunar-orbit-insertion burn is needed — the Moon's gravity naturally bends the trajectory back to Earth. The orange arc is the path already flown; blue is the planned route ahead.</p>
+          <h3>Key numbers</h3>
+          <ul>
+            <li>Max distance from Earth: <strong>406,840 km</strong> — new human spaceflight record</li>
+            <li>Closest Moon approach: <strong>~6,500 km</strong> above the lunar surface</li>
+            <li>Total trip distance: <strong>~1.1 million km</strong></li>
+            <li>Mission duration: <strong>~10 days</strong></li>
+            <li>Entry speed: <strong>~40,000 km/h</strong> — heat shield to 2,760 °C</li>
+          </ul>
+          <h3>Data sources</h3>
+          <p>Live updates from the <a class="detail-link" href="https://www.nasa.gov/missions/artemis/" target="_blank" rel="noreferrer">NASA Artemis news feed</a>. Images from the <a class="detail-link" href="https://images.nasa.gov" target="_blank" rel="noreferrer">NASA Images API</a>. No API key required — set <code>NASA_API_KEY</code> in <code>app.js</code> for higher rate limits (<a class="detail-link" href="https://api.nasa.gov" target="_blank" rel="noreferrer">get a free key</a>).</p>
+          <p class="about-note">Trajectory is a stylised approximation. Checkpoint times and distances are real NASA mission data.</p>
+        </div>
+      </div>
     </header>
 
     <main class="layout">
@@ -25,14 +54,14 @@
           <div class="legend">
             <span><i class="legend-earth"></i>Earth</span>
             <span><i class="legend-moon"></i>Moon</span>
-            <span><i class="legend-ship"></i>Artemis</span>
+            <span><i class="legend-orbit"></i>Moon Orbit</span>
+            <span><i class="legend-ship"></i>Orion</span>
             <span><i class="legend-track-live"></i>Flown</span>
             <span><i class="legend-track-plan"></i>Planned</span>
             <span><i class="legend-node"></i>Checkpoint</span>
           </div>
           <div class="viewer-actions">
             <button id="fit-screen" class="ghost-button">Fit Screen</button>
-            <button id="playback-toggle" class="ghost-button">Pause Motion</button>
           </div>
         </div>
         <div id="scene-error" class="scene-error" hidden></div>
@@ -53,6 +82,10 @@
             <div>
               <span class="metric-label">Artemis Distance from Moon</span>
               <strong id="metric-distance-am">Loading</strong>
+            </div>
+            <div>
+              <span class="metric-label">Artemis Speed</span>
+              <strong id="metric-speed">Loading</strong>
             </div>
           </div>
         </section>
@@ -76,6 +109,8 @@
       <a id="news-link" class="detail-link" href="#" target="_blank" rel="noreferrer">Open NASA source</a>
     </section>
   </div>
+
+  <div id="orion-card" class="orion-card" hidden></div>
 
   <script type="module" src="./app.js"></script>
 </body>

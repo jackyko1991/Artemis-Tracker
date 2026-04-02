@@ -1,44 +1,52 @@
 import * as THREE from "https://esm.sh/three@0.165.0";
 import { OrbitControls } from "https://esm.sh/three@0.165.0/examples/jsm/controls/OrbitControls.js";
-import { STLLoader } from "https://esm.sh/three@0.165.0/examples/jsm/loaders/STLLoader.js";
 
 const DEFAULT_MISSION_DATA = {
   missionName: "Artemis II",
-  launchDate: "2026-04-01T22:24:00Z",
+  launchDate: "2026-04-01T22:35:00Z",
   checkpoints: [
     {
       id: "launch",
       label: "Launch",
-      time: "2026-04-01T22:24:00Z",
+      time: "2026-04-01T22:35:00Z",
       progress: 0.02,
-      summary: "Orion lifts off aboard SLS from Kennedy Space Center and begins the crewed lunar flyby mission.",
+      summary: "Orion lifts off aboard SLS from Kennedy Space Center. MECO occurs 8 min later at 160 km altitude and 28,160 km/h. Solar arrays deploy and Orion enters a 43,730 × 115 mile high Earth orbit.",
       sourceUrl: "https://www.nasa.gov/missions/artemis/artemis-2/nasa-sets-coverage-for-artemis-ii-moon-mission/",
       imageUrl: "https://images-assets.nasa.gov/image/KSC-20260318-PH-KLS01_0012/KSC-20260318-PH-KLS01_0012~medium.jpg"
     },
     {
       id: "tli",
       label: "Translunar Injection",
-      time: "2026-04-02T19:30:00Z",
-      progress: 0.28,
-      summary: "Upper stage burn sends Orion out of high Earth orbit and onto the translunar trajectory toward the Moon.",
+      time: "2026-04-02T23:49:00Z",
+      progress: 0.12,
+      summary: "A 5 min 51 s ICPS burn (ΔV 388 m/s) sends Orion out of high Earth orbit onto a free-return translunar trajectory. No lunar orbit insertion — the Moon's gravity bends the path and returns the crew to Earth automatically.",
       sourceUrl: "https://www.nasa.gov/missions/artemis/artemis-2/track-nasas-artemis-ii-mission-in-real-time/",
       imageUrl: "https://images-assets.nasa.gov/image/jsc2025e081079/jsc2025e081079~medium.jpg"
     },
     {
-      id: "far-side",
-      label: "Far Side Flyby",
-      time: "2026-04-06T17:45:00Z",
-      progress: 0.68,
-      summary: "Orion passes behind the Moon and reaches the deepest point of the free-return loop before heading home.",
+      id: "lunar-flyby",
+      label: "Lunar Flyby",
+      time: "2026-04-06T18:00:00Z",
+      progress: 0.53,
+      summary: "Orion passes ~6,500 km above the lunar far side — the closest a crewed spacecraft has come to the Moon since Apollo 17. The crew briefly loses radio contact while behind the Moon.",
       sourceUrl: "https://svs.gsfc.nasa.gov/5610/",
       imageUrl: "https://images-assets.nasa.gov/image/iss072e192098/iss072e192098~medium.jpg"
     },
     {
-      id: "return",
-      label: "Earth Return",
-      time: "2026-04-10T17:00:00Z",
+      id: "max-distance",
+      label: "Distance Record",
+      time: "2026-04-06T17:45:00Z",
+      progress: 0.55,
+      summary: "At 406,840 km from Earth, Orion breaks the human spaceflight distance record set by Apollo 13 in 1970 (400,171 km). No astronaut has ever been this far from home.",
+      sourceUrl: "https://www.nasa.gov/mission/artemis-ii/",
+      imageUrl: "https://images-assets.nasa.gov/image/iss072e367304/iss072e367304~medium.jpg"
+    },
+    {
+      id: "splashdown",
+      label: "Splashdown",
+      time: "2026-04-11T00:06:00Z",
       progress: 0.98,
-      summary: "The vehicle closes the loop, re-enters Earth's neighborhood, and prepares for splashdown operations.",
+      summary: "Orion re-enters at ~40,000 km/h. The heat shield reaches 2,760 °C. After 13 minutes of entry, the capsule splashes down in the Pacific Ocean off San Diego, completing a 1.1 million km round trip.",
       sourceUrl: "https://www.nasa.gov/mission/artemis-ii/",
       imageUrl: "https://images-assets.nasa.gov/image/iss072e367304/iss072e367304~medium.jpg"
     }
@@ -51,18 +59,21 @@ const REMOTE_ASSETS = {
   earthColor: "https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg",
   earthSpecular: "https://threejs.org/examples/textures/planets/earth_specular_2048.jpg",
   moonColor: "https://threejs.org/examples/textures/planets/moon_1024.jpg",
-  orionModel: "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/printable/orion-capsule/Orion%20Capsule%20%28stand%29.stl"
+  orionModel: ""
 };
 
 const LIVE_ENDPOINTS = {
   artemisFeed: "https://www.nasa.gov/missions/artemis/feed/",
-  imageSearch: "https://images-api.nasa.gov/search?q=Artemis%20II&media_type=image&page=1"
+  imageSearch: `https://images-api.nasa.gov/search?q=Artemis%20II&media_type=image&page=1${NASA_API_KEY !== "DEMO_KEY" ? `&api_key=${NASA_API_KEY}` : ""}`
 };
+
+// Optional: replace with your free NASA API key from https://api.nasa.gov
+// DEMO_KEY works but is rate-limited (30 req/hour, 50 req/day)
+const NASA_API_KEY = "DEMO_KEY";
 
 const KM_SCALE = 384400;
 const EARTH_RADIUS_KM = 6371;
 const MOON_RADIUS_KM = 1737.4;
-const EARTH_MOON_DISTANCE_KM = 384400;
 const SCENE_EARTH_RADIUS = 2.4;
 const SCENE_MOON_DISTANCE = SCENE_EARTH_RADIUS * 8; // Visually compressed (real ratio ~60x)
 const SCENE_MOON_RADIUS = SCENE_EARTH_RADIUS * (MOON_RADIUS_KM / EARTH_RADIUS_KM);
@@ -70,27 +81,55 @@ const sceneCanvas = document.querySelector("#scene");
 const sceneError = document.querySelector("#scene-error");
 const metricDistanceAE = document.querySelector("#metric-distance-ae");
 const metricDistanceAM = document.querySelector("#metric-distance-am");
+const metricSpeed = document.querySelector("#metric-speed");
 const checkpointList = document.querySelector("#checkpoint-list");
-const playbackButton = document.querySelector("#playback-toggle");
 const fitScreenButton = document.querySelector("#fit-screen");
 const newsModal = document.querySelector("#news-modal");
 
-let playbackActive = true;
 let selectedCheckpointId = missionData.checkpoints[0].id;
 let focusCheckpoint = null;
-let pausedAtMs = 0;
-let pausedSceneTimeMs = 0;
 
 const EARTH_SIDEREAL_SECONDS = 86164.0905;
 const MOON_SIDEREAL_SECONDS = 27.321661 * 86400;
 const J2000_UTC_MS = Date.UTC(2000, 0, 1, 12, 0, 0);
 const DEG2RAD = Math.PI / 180;
 
-function formatKm(value, fractionDigits = 0) {
+function formatKm(value, fractionDigits = 2) {
   return `${value.toLocaleString(undefined, {
     minimumFractionDigits: fractionDigits,
     maximumFractionDigits: fractionDigits
   })} km`;
+}
+
+// Artemis II mission velocity profile: [progress, km/h]
+// Based on NASA mission design — fast near Earth (gravity), slow at maximum distance
+const VELOCITY_PROFILE = [
+  [0.00,     0],
+  [0.02, 28160],  // MECO — 160 km altitude, 28,160 km/h
+  [0.12, 37800],  // TLI burn peak (ΔV 388 m/s)
+  [0.22, 12000],  // early outbound (decelerating against Earth gravity)
+  [0.35,  5500],
+  [0.45,  3400],  // approaching Moon
+  [0.53,  3100],  // lunar flyby closest approach ~6,500 km
+  [0.55,  2800],  // maximum distance — slowest point
+  [0.65,  3600],  // return transit (accelerating due to gravity)
+  [0.75,  6000],
+  [0.85, 12000],
+  [0.93, 25000],
+  [0.96, 36000],  // entry interface
+  [0.98, 40000],  // peak heating ~40,000 km/h
+  [1.00,     0],
+];
+
+function getVelocityKmH(progress) {
+  for (let i = 0; i < VELOCITY_PROFILE.length - 1; i++) {
+    const [t0, v0] = VELOCITY_PROFILE[i];
+    const [t1, v1] = VELOCITY_PROFILE[i + 1];
+    if (progress >= t0 && progress <= t1) {
+      return v0 + (v1 - v0) * ((progress - t0) / (t1 - t0));
+    }
+  }
+  return 0;
 }
 
 function getCheckpoint(checkpointId) {
@@ -100,10 +139,6 @@ function getCheckpoint(checkpointId) {
 function setDetail(checkpointId) {
   selectedCheckpointId = checkpointId;
   refreshCheckpointListState(getMissionProgress(getSceneTimeMs()));
-}
-
-function openNewsModal(checkpointId) {
-  openNewsModalAt(checkpointId);
 }
 
 function openNewsModalAt(checkpointId, anchorElement = null) {
@@ -154,7 +189,7 @@ function closeNewsModal() {
 
 function renderCheckpointList() {
   checkpointList.innerHTML = "";
-  missionData.checkpoints.forEach((checkpoint) => {
+  missionData.checkpoints.slice().reverse().forEach((checkpoint) => {
     const item = document.createElement("li");
     item.className = "checkpoint-item";
 
@@ -198,8 +233,9 @@ function refreshCheckpointListState(progress) {
 }
 
 function getMissionProgress(nowMs = Date.now()) {
-  const launch = new Date(missionData.launchDate).getTime();
-  const end = new Date(missionData.checkpoints[missionData.checkpoints.length - 1].time).getTime();
+  // Always use DEFAULT_MISSION_DATA timestamps so live-feed data cannot break progress
+  const launch = new Date(DEFAULT_MISSION_DATA.launchDate).getTime();
+  const end = new Date(DEFAULT_MISSION_DATA.checkpoints[DEFAULT_MISSION_DATA.checkpoints.length - 1].time).getTime();
   const progress = (nowMs - launch) / (end - launch);
   return THREE.MathUtils.clamp(progress, 0.02, 0.98);
 }
@@ -231,43 +267,103 @@ function loadTexture(loader, url) {
   });
 }
 
-function loadStl(loader, url) {
-  return new Promise((resolve, reject) => {
-    loader.load(url, resolve, undefined, reject);
+function createSpacecraftModel() {
+  const group = new THREE.Group();
+  const bodyMat = new THREE.MeshStandardMaterial({ color: 0xd9dee8, emissive: 0x152033, emissiveIntensity: 0.52, metalness: 0.56, roughness: 0.42 });
+  const panelMat = new THREE.MeshStandardMaterial({ color: 0x1a3a6b, emissive: 0x0a1a40, emissiveIntensity: 0.5, metalness: 0.3, roughness: 0.55 });
+
+  // Crew module — tapered cone (narrow top, wider heat-shield base)
+  const cm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.16, 0.20, 12), bodyMat);
+  cm.position.y = 0.21;
+  group.add(cm);
+
+  // Service module — cylinder
+  const sm = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.22, 12), bodyMat.clone());
+  sm.position.y = 0.05;
+  group.add(sm);
+
+  // Solar panels (two arms)
+  const panelGeo = new THREE.BoxGeometry(0.38, 0.005, 0.10);
+  [-0.30, 0.30].forEach((x) => {
+    const panel = new THREE.Mesh(panelGeo, panelMat);
+    panel.position.set(x, 0.05, 0);
+    group.add(panel);
   });
+
+  // Glow halo
+  const glow = new THREE.Mesh(
+    new THREE.SphereGeometry(0.26, 16, 16),
+    new THREE.MeshBasicMaterial({ color: 0xff8452, transparent: true, opacity: 0.32 })
+  );
+  group.add(glow);
+
+  // Invisible hit-sphere — makes hover detection reliable at any zoom level
+  const hitArea = new THREE.Mesh(
+    new THREE.SphereGeometry(0.5, 8, 8),
+    new THREE.MeshBasicMaterial({ visible: false })
+  );
+  hitArea.userData.isHitArea = true;
+  group.add(hitArea);
+
+  return group;
+}
+
+function createFadingTube(curve, tubularSegments, radius, radialSegments) {
+  const geo = new THREE.TubeGeometry(curve, tubularSegments, radius, radialSegments, false);
+  const ringCount = radialSegments + 1;
+  const colors = new Float32Array((tubularSegments + 1) * ringCount * 3);
+  for (let i = 0; i <= tubularSegments; i++) {
+    const fade = Math.pow(i / tubularSegments, 1.8); // dim at start, bright at tip
+    for (let j = 0; j < ringCount; j++) {
+      const idx = (i * ringCount + j) * 3;
+      colors[idx]     = fade;
+      colors[idx + 1] = 0.55 * fade;
+      colors[idx + 2] = 0.22 * fade;
+    }
+  }
+  geo.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+  return geo;
 }
 
 function createTrajectoryCurve() {
   const D = SCENE_MOON_DISTANCE;
   const R = SCENE_EARTH_RADIUS;
-  // Free-return trajectory: outbound arcs above the plane, swings past Moon, returns below
+  // Free-return trajectory in the XZ plane (matches Moon orbital plane).
+  // All points kept > R*2 from Earth centre so Orion never overlaps Earth.
+  // Moon flyby at D*0.96 — just inside the orbit ring, no overshoot.
+  // Departure/arrival on the viewer-facing (+X,+Z) side of Earth so the
+  // spacecraft is clearly near Earth at launch/return.
+  // Max extent D*0.82 keeps the flyby visibly inside the Moon orbit ring.
+  // Clean free-return trajectory — X increases to Moon flyby then decreases back.
+  // No Earth-orbit arc so the spline stays smooth throughout.
   const points = [
-    new THREE.Vector3(R * 1.08, 0, 0),
-    new THREE.Vector3(D * 0.14, D * 0.10, D * 0.04),
-    new THREE.Vector3(D * 0.30, D * 0.18, D * 0.06),
-    new THREE.Vector3(D * 0.50, D * 0.22, D * 0.05),
-    new THREE.Vector3(D * 0.70, D * 0.17, D * 0.01),
-    new THREE.Vector3(D * 0.88, D * 0.08, -D * 0.04),
-    new THREE.Vector3(D * 1.02, D * 0.01, -D * 0.07),
-    new THREE.Vector3(D * 0.90, -D * 0.08, -D * 0.11),
-    new THREE.Vector3(D * 0.68, -D * 0.17, -D * 0.13),
-    new THREE.Vector3(D * 0.44, -D * 0.20, -D * 0.11),
-    new THREE.Vector3(D * 0.20, -D * 0.14, -D * 0.07)
+    new THREE.Vector3( R * 1.08,  0.05,  D * 0.05), // TLI departure — just above Earth surface
+    new THREE.Vector3( D * 0.22,  0.5,   D * 0.18), // early outbound
+    new THREE.Vector3( D * 0.50,  0.5,   D * 0.14), // mid outbound
+    new THREE.Vector3( D * 0.74,  0.3,   D * 0.06), // approaching Moon
+    new THREE.Vector3( D * 0.82,  0.05,  0        ), // Moon flyby — inside orbit ring
+    new THREE.Vector3( D * 0.74, -0.20, -D * 0.06), // post-flyby
+    new THREE.Vector3( D * 0.50, -0.45, -D * 0.14), // mid return
+    new THREE.Vector3( D * 0.22, -0.50, -D * 0.18), // late return
+    new THREE.Vector3( R * 1.6,  -0.15, -D * 0.10), // Earth arrival — re-entry approach
   ];
   return new THREE.CatmullRomCurve3(points, false, "centripetal", 0.12);
 }
 
-function updateMetrics(earth, moon, spacecraft) {
+function updateMetrics(earth, moon, spacecraft, progress) {
   const earthPos = earth.getWorldPosition(new THREE.Vector3());
   const moonPos = moon.getWorldPosition(new THREE.Vector3());
   const shipPos = spacecraft.getWorldPosition(new THREE.Vector3());
 
-  metricDistanceAE.textContent = formatKm(earthPos.distanceTo(shipPos) / SCENE_MOON_DISTANCE * KM_SCALE, 1);
-  metricDistanceAM.textContent = formatKm(moonPos.distanceTo(shipPos) / SCENE_MOON_DISTANCE * KM_SCALE, 1);
+  metricDistanceAE.textContent = formatKm(earthPos.distanceTo(shipPos) / SCENE_MOON_DISTANCE * KM_SCALE);
+  metricDistanceAM.textContent = formatKm(moonPos.distanceTo(shipPos) / SCENE_MOON_DISTANCE * KM_SCALE);
+
+  const speedKmH = getVelocityKmH(progress);
+  metricSpeed.textContent = `${speedKmH.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km/h`;
 }
 
 function getSceneTimeMs() {
-  return playbackActive ? Date.now() : pausedSceneTimeMs;
+  return Date.now();
 }
 
 function getRealTimeAngles(nowMs) {
@@ -302,7 +398,7 @@ function getSolarDirection(nowMs) {
   return new THREE.Vector3(x, y, z).normalize();
 }
 
-function buildCheckpointFromFeedItem(item, fallbackImage, index, total) {
+function buildCheckpointFromFeedItem(item, fallbackImage, index) {
   const fallback = DEFAULT_MISSION_DATA.checkpoints[index] || DEFAULT_MISSION_DATA.checkpoints[0];
   const launch = new Date(DEFAULT_MISSION_DATA.launchDate).getTime();
   const missionEnd = launch + (10 * 24 * 60 * 60 * 1000);
@@ -377,7 +473,7 @@ async function hydrateMissionData() {
     }
 
     missionData.checkpoints = liveItems
-      .map((item, index) => buildCheckpointFromFeedItem(item, imageItems[index]?.imageUrl || "", index, liveItems.length))
+      .map((item, index) => buildCheckpointFromFeedItem(item, imageItems[index]?.imageUrl || "", index))
       .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
 
     selectedCheckpointId = missionData.checkpoints[0].id;
@@ -388,16 +484,6 @@ async function hydrateMissionData() {
   }
 }
 
-playbackButton.addEventListener("click", () => {
-  playbackActive = !playbackActive;
-  if (playbackActive) {
-    pausedAtMs = 0;
-  } else {
-    pausedAtMs = Date.now();
-    pausedSceneTimeMs = pausedAtMs;
-  }
-  playbackButton.textContent = playbackActive ? "Pause Motion" : "Resume Motion";
-});
 
 async function initScene() {
   const renderer = new THREE.WebGLRenderer({ canvas: sceneCanvas, antialias: true, alpha: true });
@@ -428,27 +514,16 @@ async function initScene() {
   fillLight.position.set(-10, 4, -6);
   scene.add(fillLight);
 
-  const sunGlow = new THREE.Mesh(
-    new THREE.SphereGeometry(0.75, 24, 24),
-    new THREE.MeshBasicMaterial({
-      color: 0xfff2c4,
-      transparent: true,
-      opacity: 0.95
-    })
-  );
-  scene.add(sunGlow);
 
   const earthGroup = new THREE.Group();
   scene.add(earthGroup);
 
   const textureLoader = new THREE.TextureLoader();
-  const stlLoader = new STLLoader();
 
-  const [earthColor, earthSpecular, moonColor, orionGeometry] = await Promise.all([
+  const [earthColor, earthSpecular, moonColor] = await Promise.all([
     loadTexture(textureLoader, REMOTE_ASSETS.earthColor),
     loadTexture(textureLoader, REMOTE_ASSETS.earthSpecular),
-    loadTexture(textureLoader, REMOTE_ASSETS.moonColor),
-    loadStl(stlLoader, REMOTE_ASSETS.orionModel)
+    loadTexture(textureLoader, REMOTE_ASSETS.moonColor)
   ]);
 
   earthColor.colorSpace = THREE.SRGBColorSpace;
@@ -494,6 +569,19 @@ async function initScene() {
   moon.position.set(SCENE_MOON_DISTANCE, 0, 0);
   moonPivot.add(moon);
 
+  // Moon orbit — dashed ring in the XZ plane
+  const moonOrbitPoints = Array.from({ length: 129 }, (_, i) => {
+    const a = (i / 128) * Math.PI * 2;
+    return new THREE.Vector3(Math.cos(a) * SCENE_MOON_DISTANCE, 0, Math.sin(a) * SCENE_MOON_DISTANCE);
+  });
+  const moonOrbitGeometry = new THREE.BufferGeometry().setFromPoints(moonOrbitPoints);
+  const moonOrbitLine = new THREE.Line(
+    moonOrbitGeometry,
+    new THREE.LineDashedMaterial({ color: 0x7aaedd, dashSize: 0.6, gapSize: 0.4, opacity: 0.75, transparent: true })
+  );
+  moonOrbitLine.computeLineDistances();
+  scene.add(moonOrbitLine);
+
   const trajectoryCurve = createTrajectoryCurve();
   const trajectoryRadius = Math.max(0.075, SCENE_EARTH_RADIUS * 0.028);
   let liveTrajectoryGeometry = new THREE.TubeGeometry(
@@ -506,7 +594,7 @@ async function initScene() {
   const liveTrajectoryLine = new THREE.Mesh(
     liveTrajectoryGeometry,
     new THREE.MeshStandardMaterial({
-      color: 0xff8d5c,
+      vertexColors: true,
       emissive: 0x5a2010,
       emissiveIntensity: 0.62,
       roughness: 0.6,
@@ -541,18 +629,7 @@ async function initScene() {
   );
   scene.add(plannedTrajectoryLine);
 
-  orionGeometry.center();
-  const spacecraft = new THREE.Mesh(
-    orionGeometry,
-    new THREE.MeshStandardMaterial({
-      color: 0xd9dee8,
-      emissive: 0x152033,
-      emissiveIntensity: 0.52,
-      metalness: 0.56,
-      roughness: 0.42
-    })
-  );
-  spacecraft.scale.setScalar(0.0034);
+  const spacecraft = createSpacecraftModel();
   scene.add(spacecraft);
 
   const checkpointMeshes = [];
@@ -616,10 +693,20 @@ async function initScene() {
     camera.updateProjectionMatrix();
   }
 
-  function onPointerDown(event) {
+  function getCanvasPointer(event) {
     const rect = renderer.domElement.getBoundingClientRect();
-    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    return {
+      x: ((event.clientX - rect.left) / rect.width) * 2 - 1,
+      y: -((event.clientY - rect.top) / rect.height) * 2 + 1,
+      clientX: event.clientX,
+      clientY: event.clientY
+    };
+  }
+
+  function onPointerDown(event) {
+    const { x, y } = getCanvasPointer(event);
+    pointer.x = x;
+    pointer.y = y;
 
     raycaster.setFromCamera(pointer, camera);
     const intersects = raycaster.intersectObjects(checkpointMeshes);
@@ -630,8 +717,84 @@ async function initScene() {
     }
   }
 
+  const orionCard = document.querySelector("#orion-card");
+
+  function showOrionCard(clientX, clientY) {
+    const ae = metricDistanceAE.textContent;
+    const am = metricDistanceAM.textContent;
+    const spd = metricSpeed.textContent;
+    const pct = Math.round(getMissionProgress(getSceneTimeMs()) * 100);
+    orionCard.innerHTML = `
+      <p class="eyebrow">Orion Live Status</p>
+      <dl class="orion-card-dl">
+        <dt>Mission progress</dt><dd>${pct}%</dd>
+        <dt>Distance from Earth</dt><dd>${ae}</dd>
+        <dt>Distance from Moon</dt><dd>${am}</dd>
+        <dt>Speed</dt><dd>${spd}</dd>
+      </dl>`;
+    orionCard.style.left = `${clientX + 14}px`;
+    orionCard.style.top  = `${clientY - 10}px`;
+    orionCard.hidden = false;
+  }
+
+  function hideOrionCard() {
+    orionCard.hidden = true;
+  }
+
+  let hoveredCheckpointId = null;
+  let orionHovered = false;
+
+  function onPointerMove(event) {
+    const { x, y, clientX, clientY } = getCanvasPointer(event);
+    pointer.x = x;
+    pointer.y = y;
+
+    raycaster.setFromCamera(pointer, camera);
+
+    // Check spacecraft first
+    const hitSphere = spacecraft.children.find(c => c.userData.isHitArea);
+    const shipHits = hitSphere ? raycaster.intersectObject(hitSphere) : [];
+    if (shipHits.length > 0) {
+      if (!orionHovered) {
+        orionHovered = true;
+        hoveredCheckpointId = null;
+        closeNewsModal();
+        renderer.domElement.style.cursor = "crosshair";
+      }
+      showOrionCard(clientX, clientY);
+      return;
+    }
+    if (orionHovered) {
+      orionHovered = false;
+      hideOrionCard();
+      renderer.domElement.style.cursor = "";
+    }
+
+    // Check checkpoint nodes
+    const intersects = raycaster.intersectObjects(checkpointMeshes);
+    if (intersects.length > 0) {
+      const checkpointId = intersects[0].object.userData.checkpointId;
+      if (checkpointId !== hoveredCheckpointId) {
+        hoveredCheckpointId = checkpointId;
+        setDetail(checkpointId);
+        const fakeAnchor = {
+          getBoundingClientRect: () => ({ left: clientX, right: clientX, top: clientY })
+        };
+        openNewsModalAt(checkpointId, fakeAnchor);
+        renderer.domElement.style.cursor = "pointer";
+      }
+    } else {
+      if (hoveredCheckpointId !== null) {
+        hoveredCheckpointId = null;
+        closeNewsModal();
+        renderer.domElement.style.cursor = "";
+      }
+    }
+  }
+
   window.addEventListener("resize", resize);
   renderer.domElement.addEventListener("pointerdown", onPointerDown);
+  renderer.domElement.addEventListener("pointermove", onPointerMove);
   fitScreenButton.addEventListener("click", fitSceneToView);
   resize();
   fitSceneToView();
@@ -647,7 +810,6 @@ async function initScene() {
     moonPivot.rotation.y = moonOrbit;
     keyLight.position.copy(solarDirection).multiplyScalar(42);
     fillLight.position.copy(solarDirection).multiplyScalar(-18).add(new THREE.Vector3(-4, 3, 0));
-    sunGlow.position.copy(solarDirection).multiplyScalar(54);
 
     const progress = getMissionProgress(nowMs);
     const shipPoint = trajectoryCurve.getPoint(progress);
@@ -661,12 +823,11 @@ async function initScene() {
       "centripetal",
       0.12
     );
-    const nextGeometry = new THREE.TubeGeometry(
+    const nextGeometry = createFadingTube(
       completedCurve,
       Math.max(24, Math.floor(220 * progress)),
       trajectoryRadius,
-      12,
-      false
+      12
     );
     const remainingCurve = new THREE.CatmullRomCurve3(
       trajectoryCurve.getPoints(Math.max(8, Math.floor(220 * (1 - progress)))).map((_, index, points) => {
@@ -704,13 +865,20 @@ async function initScene() {
     refreshCheckpointListState(progress);
 
     controls.update();
-    updateMetrics(earth, moon, spacecraft);
+    updateMetrics(earth, moon, spacecraft, progress);
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
 
   animate();
 }
+
+document.querySelector("#about-btn").addEventListener("click", () => {
+  const panel = document.querySelector("#about-panel");
+  const btn = document.querySelector("#about-btn");
+  panel.hidden = !panel.hidden;
+  btn.textContent = panel.hidden ? "What is this? ▾" : "What is this? ▴";
+});
 
 try {
   await hydrateMissionData();
