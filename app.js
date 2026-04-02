@@ -451,8 +451,21 @@ function buildCheckpointFromFeedItem(item, fallbackImage, index) {
   };
 }
 
+async function fetchWithTimeout(url, timeoutMs = 6000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
+    return response;
+  } catch (err) {
+    clearTimeout(timer);
+    throw err;
+  }
+}
+
 async function fetchArtemisFeed() {
-  const response = await fetch(LIVE_ENDPOINTS.artemisFeed);
+  const response = await fetchWithTimeout(LIVE_ENDPOINTS.artemisFeed);
   if (!response.ok) {
     throw new Error(`NASA Artemis feed returned ${response.status}`);
   }
@@ -471,7 +484,7 @@ async function fetchArtemisFeed() {
 }
 
 async function fetchArtemisImages() {
-  const response = await fetch(LIVE_ENDPOINTS.imageSearch);
+  const response = await fetchWithTimeout(LIVE_ENDPOINTS.imageSearch);
   if (!response.ok) {
     throw new Error(`NASA image API returned ${response.status}`);
   }
@@ -889,11 +902,19 @@ async function initScene() {
   animate();
 }
 
-document.querySelector("#about-btn").addEventListener("click", () => {
+document.querySelector("#about-btn").addEventListener("click", (e) => {
+  e.stopPropagation();
   const panel = document.querySelector("#about-panel");
   const btn = document.querySelector("#about-btn");
-  panel.hidden = !panel.hidden;
-  btn.textContent = panel.hidden ? "What is this? ▾" : "What is this? ▴";
+  const opening = panel.hasAttribute("hidden");
+  if (opening) {
+    panel.removeAttribute("hidden");
+    panel.style.display = "block";
+  } else {
+    panel.style.display = "none";
+    panel.setAttribute("hidden", "");
+  }
+  btn.textContent = opening ? "What is this? ▴" : "What is this? ▾";
 });
 
 try {
