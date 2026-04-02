@@ -261,9 +261,18 @@ function clampProgress(progress) {
   return THREE.MathUtils.clamp(progress, 0.02, 0.98);
 }
 
-function loadTexture(loader, url) {
-  return new Promise((resolve, reject) => {
-    loader.load(url, resolve, undefined, reject);
+function loadTexture(loader, url, timeoutMs = 8000) {
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => {
+      console.warn(`Texture load timed out: ${url}`);
+      resolve(null);
+    }, timeoutMs);
+    loader.load(
+      url,
+      (tex) => { clearTimeout(timer); resolve(tex); },
+      undefined,
+      (err) => { clearTimeout(timer); console.warn(`Texture load failed: ${url}`, err); resolve(null); }
+    );
   });
 }
 
@@ -306,6 +315,24 @@ function createSpacecraftModel() {
   group.add(hitArea);
 
   return group;
+}
+
+// Planned (future) tube — bright at start (Orion's position), fades out toward Earth arrival
+function createFadingPlannedTube(curve, tubularSegments, radius, radialSegments) {
+  const geo = new THREE.TubeGeometry(curve, tubularSegments, radius, radialSegments, false);
+  const ringCount = radialSegments + 1;
+  const colors = new Float32Array((tubularSegments + 1) * ringCount * 3);
+  for (let i = 0; i <= tubularSegments; i++) {
+    const fade = Math.pow(1.0 - i / tubularSegments, 1.4); // bright at Orion end, invisible at Earth end
+    for (let j = 0; j < ringCount; j++) {
+      const idx = (i * ringCount + j) * 3;
+      colors[idx]     = 0.56 * fade;
+      colors[idx + 1] = 0.82 * fade;
+      colors[idx + 2] = fade;
+    }
+  }
+  geo.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+  return geo;
 }
 
 function createFadingTube(curve, tubularSegments, radius, radialSegments) {
@@ -526,17 +553,17 @@ async function initScene() {
     loadTexture(textureLoader, REMOTE_ASSETS.moonColor)
   ]);
 
-  earthColor.colorSpace = THREE.SRGBColorSpace;
-  moonColor.colorSpace = THREE.SRGBColorSpace;
+  if (earthColor) earthColor.colorSpace = THREE.SRGBColorSpace;
+  if (moonColor) moonColor.colorSpace = THREE.SRGBColorSpace;
 
   const earth = new THREE.Mesh(
     new THREE.SphereGeometry(SCENE_EARTH_RADIUS, 48, 48),
     new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      map: earthColor,
+      color: earthColor ? 0xffffff : 0x2255aa,
+      map: earthColor || null,
       emissive: 0x082854,
       emissiveIntensity: 0.58,
-      metalnessMap: earthSpecular,
+      metalnessMap: earthSpecular || null,
       roughness: 0.72,
       metalness: 0.08
     })
@@ -559,8 +586,8 @@ async function initScene() {
   const moon = new THREE.Mesh(
     new THREE.SphereGeometry(SCENE_MOON_RADIUS, 36, 36),
     new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      map: moonColor,
+      color: moonColor ? 0xffffff : 0x888888,
+      map: moonColor || null,
       emissive: 0x111318,
       emissiveIntensity: 0.14,
       roughness: 0.94
@@ -603,26 +630,16 @@ async function initScene() {
   );
   scene.add(liveTrajectoryLine);
 
-  let plannedTrajectoryGeometry = new THREE.TubeGeometry(
-    new THREE.CatmullRomCurve3(
-      trajectoryCurve.getPoints(64),
-      false,
-      "centripetal",
-      0.12
-    ),
-    64,
-    trajectoryRadius * 0.52,
-    10,
-    false
+  let plannedTrajectoryGeometry = createFadingPlannedTube(
+    new THREE.CatmullRomCurve3(trajectoryCurve.getPoints(64), false, "centripetal", 0.12),
+    64, trajectoryRadius * 0.52, 10
   );
   const plannedTrajectoryLine = new THREE.Mesh(
     plannedTrajectoryGeometry,
     new THREE.MeshStandardMaterial({
-      color: 0x8ed1ff,
+      vertexColors: true,
       emissive: 0x1f3954,
       emissiveIntensity: 0.85,
-      transparent: true,
-      opacity: 0.82,
       roughness: 0.45,
       metalness: 0.08
     })
@@ -838,12 +855,11 @@ async function initScene() {
       "centripetal",
       0.12
     );
-    const nextPlannedGeometry = new THREE.TubeGeometry(
+    const nextPlannedGeometry = createFadingPlannedTube(
       remainingCurve,
       Math.max(18, Math.floor(220 * (1 - progress))),
       trajectoryRadius * 0.52,
-      10,
-      false
+      10
     );
     liveTrajectoryLine.geometry.dispose();
     liveTrajectoryLine.geometry = nextGeometry;
