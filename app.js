@@ -55,6 +55,10 @@ const DEFAULT_MISSION_DATA = {
 
 const missionData = structuredClone(DEFAULT_MISSION_DATA);
 
+// Optional: replace with your free NASA API key from https://api.nasa.gov
+// DEMO_KEY works but is rate-limited (30 req/hour, 50 req/day)
+const NASA_API_KEY = "DEMO_KEY";
+
 const REMOTE_ASSETS = {
   earthColor: "https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg",
   earthSpecular: "https://threejs.org/examples/textures/planets/earth_specular_2048.jpg",
@@ -66,10 +70,6 @@ const LIVE_ENDPOINTS = {
   artemisFeed: "https://www.nasa.gov/missions/artemis/feed/",
   imageSearch: `https://images-api.nasa.gov/search?q=Artemis%20II&media_type=image&page=1${NASA_API_KEY !== "DEMO_KEY" ? `&api_key=${NASA_API_KEY}` : ""}`
 };
-
-// Optional: replace with your free NASA API key from https://api.nasa.gov
-// DEMO_KEY works but is rate-limited (30 req/hour, 50 req/day)
-const NASA_API_KEY = "DEMO_KEY";
 
 const KM_SCALE = 384400;
 const EARTH_RADIUS_KM = 6371;
@@ -917,8 +917,8 @@ document.querySelector("#about-btn").addEventListener("click", (e) => {
   btn.textContent = opening ? "What is this? ▴" : "What is this? ▾";
 });
 
+// Start scene immediately with default data — don't block on network requests
 try {
-  await hydrateMissionData();
   renderCheckpointList();
   setDetail(selectedCheckpointId);
   await initScene();
@@ -928,3 +928,9 @@ try {
   metricDistanceAE.textContent = "Unavailable";
   metricDistanceAM.textContent = "Unavailable";
 }
+
+// Hydrate live data in the background; refresh checkpoint list when it arrives
+hydrateMissionData().then(() => {
+  renderCheckpointList();
+  setDetail(selectedCheckpointId);
+}).catch(() => {});
