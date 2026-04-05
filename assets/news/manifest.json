@@ -1,0 +1,82 @@
+{
+  "launch": {
+    "checkpointId": "launch",
+    "localPath": "./assets/news/launch.webp",
+    "remoteUrl": "https://www.nasa.gov/wp-content/uploads/2026/04/art002e008486orig.jpg?w=2048",
+    "sourceUrl": "https://www.nasa.gov/missions/artemis/artemis-2/nasa-sets-coverage-for-artemis-ii-moon-mission/",
+    "contentType": "image/webp",
+    "cachedAt": "2026-04-05T16:05:29.650Z"
+  },
+  "meco-staging": {
+    "checkpointId": "meco-staging",
+    "localPath": "./assets/news/meco-staging.jpg",
+    "remoteUrl": "https://images-assets.nasa.gov/image/art002e008487/art002e008487~large.jpg?w=1920&h=1440&fit=clip&crop=faces%2Cfocalpoint",
+    "sourceUrl": "https://www.nasa.gov/missions/artemis/artemis-2/track-nasas-artemis-ii-mission-in-real-time/",
+    "contentType": "image/jpeg",
+    "cachedAt": "2026-04-05T16:05:29.708Z"
+  },
+  "spacecraft-separation": {
+    "checkpointId": "spacecraft-separation",
+    "localPath": "./assets/news/spacecraft-separation.webp",
+    "remoteUrl": "https://www.nasa.gov/wp-content/uploads/2026/04/55187055368-7ab1e4c6a4-o.jpg?w=2048",
+    "sourceUrl": "https://www.nasa.gov/missions/artemis/artemis-2/track-nasas-artemis-ii-mission-in-real-time/",
+    "contentType": "image/webp",
+    "cachedAt": "2026-04-05T16:05:29.741Z"
+  },
+  "high-earth-checkout": {
+    "checkpointId": "high-earth-checkout",
+    "localPath": "./assets/news/high-earth-checkout.jpg",
+    "remoteUrl": "https://assets.science.nasa.gov/dynamicimage/assets/science/psd/ares/jsc2026e006229.jpg?w=7230&h=5423&fit=clip&crop=faces%2Cfocalpoint",
+    "sourceUrl": "https://www.nasa.gov/missions/artemis/artemis-2/track-nasas-artemis-ii-mission-in-real-time/",
+    "contentType": "image/jpeg",
+    "cachedAt": "2026-04-05T16:05:29.799Z"
+  },
+  "tli": {
+    "checkpointId": "tli",
+    "localPath": "./assets/news/tli.webp",
+    "remoteUrl": "https://www.nasa.gov/wp-content/uploads/2026/04/art002e000192.jpg?w=2048",
+    "sourceUrl": "https://www.nasa.gov/missions/artemis/artemis-2/track-nasas-artemis-ii-mission-in-real-time/",
+    "contentType": "image/webp",
+    "cachedAt": "2026-04-05T16:05:32.012Z"
+  },
+  "lunar-flyby": {
+    "checkpointId": "lunar-flyby",
+    "localPath": "./assets/news/lunar-flyby.webp",
+    "remoteUrl": "https://www.nasa.gov/wp-content/uploads/2026/04/tli.jpg?w=1902",
+    "sourceUrl": "https://svs.gsfc.nasa.gov/5610/",
+    "contentType": "image/webp",
+    "cachedAt": "2026-04-05T16:05:32.722Z"
+  },
+  "max-distance": {
+    "checkpointId": "max-distance",
+    "localPath": "./assets/news/max-distance.webp",
+    "remoteUrl": "https://www.nasa.gov/wp-content/uploads/2026/04/55182924516-9d78d1e3ef-o.jpg?w=2048",
+    "sourceUrl": "https://www.nasa.gov/mission/artemis-ii/",
+    "contentType": "image/webp",
+    "cachedAt": "2026-04-05T16:05:34.972Z"
+  },
+  "crew-module-sep": {
+    "checkpointId": "crew-module-sep",
+    "localPath": "./assets/news/crew-module-sep.webp",
+    "remoteUrl": "https://www.nasa.gov/wp-content/uploads/2026/04/launch.jpg?w=1024",
+    "sourceUrl": "https://www.nasa.gov/mission/artemis-ii/",
+    "contentType": "image/webp",
+    "cachedAt": "2026-04-05T16:05:35.623Z"
+  },
+  "reentry": {
+    "checkpointId": "reentry",
+    "localPath": "./assets/news/reentry.webp",
+    "remoteUrl": "https://www.nasa.gov/wp-content/uploads/2026/03/her1pqpbeaazfzl.jpg?w=2048",
+    "sourceUrl": "https://www.nasa.gov/mission/artemis-ii/",
+    "contentType": "image/webp",
+    "cachedAt": "2026-04-05T16:05:37.218Z"
+  },
+  "splashdown": {
+    "checkpointId": "splashdown",
+    "localPath": "./assets/news/splashdown.webp",
+    "remoteUrl": "https://www.nasa.gov/wp-content/uploads/2026/03/jsc2026e017251.jpg?w=2048",
+    "sourceUrl": "https://www.nasa.gov/mission/artemis-ii/",
+    "contentType": "image/webp",
+    "cachedAt": "2026-04-05T16:05:39.147Z"
+  }
+}

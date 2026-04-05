@@ -8,43 +8,50 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
       <div>
-        <p class="eyebrow">Live Mission View</p>
-        <h1>Artemis Flight Tracker</h1>
+        <p class="eyebrow" id="top-eyebrow">Live Mission View</p>
+        <h1 id="app-title">Artemis Flight Tracker</h1>
       </div>
-      <div class="about-block">
-        <button id="about-btn" class="ghost-button about-btn">What is this? ▾</button>
-        <div id="about-panel" class="about-panel" hidden>
-          <h3>Artemis II</h3>
-          <p>Artemis II is the first crewed flight of NASA's SLS rocket and Orion spacecraft — the first humans bound for deep space since Apollo 17 in 1972. Four astronauts confirm all spacecraft systems work in the deep-space environment before Artemis III attempts a lunar landing.</p>
-          <h3>Crew</h3>
-          <ul>
-            <li><strong>Reid Wiseman</strong> — Commander (NASA)</li>
-            <li><strong>Victor Glover</strong> — Pilot (NASA)</li>
-            <li><strong>Christina Koch</strong> — Mission Specialist (NASA)</li>
-            <li><strong>Jeremy Hansen</strong> — Mission Specialist (CSA)</li>
-          </ul>
-          <h3>Free-return trajectory</h3>
-          <img src="./artemis2_map.jpg" alt="Artemis II trajectory map" class="about-map">
-          <p>After launch from Kennedy Space Center, a Translunar Injection (TLI) burn sends Orion onto a <strong>free-return path</strong>. No lunar-orbit-insertion burn is needed — the Moon's gravity naturally bends the trajectory back to Earth. The orange arc is the path already flown; blue is the planned route ahead.</p>
-          <h3>Key numbers</h3>
-          <ul>
-            <li>Max distance from Earth: <strong>406,840 km</strong> — new human spaceflight record</li>
-            <li>Closest Moon approach: <strong>~6,500 km</strong> above the lunar surface</li>
-            <li>Total trip distance: <strong>~1.1 million km</strong></li>
-            <li>Mission duration: <strong>~10 days</strong></li>
-            <li>Entry speed: <strong>~40,000 km/h</strong> — heat shield to 2,760 °C</li>
-          </ul>
-          <h3>Data sources</h3>
-          <p>Live updates from the <a class="detail-link" href="https://www.nasa.gov/missions/artemis/" target="_blank" rel="noreferrer">NASA Artemis news feed</a>. Images from the <a class="detail-link" href="https://images.nasa.gov" target="_blank" rel="noreferrer">NASA Images API</a>. </p>
-          <p class="about-note">Trajectory is a stylised approximation. Checkpoint times and distances are real NASA mission data.</p>
-        </div>
-      </div>
+      <div class="info-actions">
+        <!-- About -->
+        <div class="info-block">
+          <button id="about-btn" class="ghost-button info-btn">About ▾</button>
+          <div id="about-panel" class="about-panel" hidden>
+          <div class="about-pane" id="pane-about"></div>
+          </div><!-- /#about-panel -->
+        </div><!-- /.info-block -->
+
+        <!-- Tech Note -->
+        <div class="info-block">
+          <button id="tech-btn" class="ghost-button info-btn">Tech Note ▾</button>
+          <div id="tech-panel" class="about-panel" hidden>
+          <div class="about-pane tech-cols" id="pane-tech"></div>
+          </div><!-- /#tech-panel -->
+        </div><!-- /.info-block -->
+
+        <!-- Terminology -->
+        <div class="info-block">
+          <button id="terms-btn" class="ghost-button info-btn">Terminology ▾</button>
+          <div id="terms-panel" class="about-panel" hidden>
+          <div class="about-pane" id="pane-terms"></div>
+          </div><!-- /#terms-panel -->
+        </div><!-- /.info-block -->
+        <div class="info-block">
+          <select id="lang-select" class="ghost-button info-btn lang-select" aria-label="Language">
+            <option value="en">English</option>
+            <option value="zh-Hant">繁體中文</option>
+          </select>
+        </div><!-- /.info-block -->
+      </div><!-- /.info-actions -->
     </header>
 
     <main class="layout">
@@ -56,34 +63,35 @@
             <button id="fit-screen" class="ghost-button">Fit Screen</button>
           </div>
         </div>
+        <div id="viewer-footnote" class="viewer-footnote">Moon display is visually adjusted to keep the flyby readable.</div>
         <div id="scene-error" class="scene-error" hidden></div>
       </section>
 
       <aside class="sidebar">
         <section class="panel mission-panel">
-          <p class="eyebrow">Mission Snapshot</p>
+          <p id="mission-eyebrow" class="eyebrow">Mission Snapshot</p>
           <div class="metrics">
             <div>
-              <span class="metric-label">Earth to Moon</span>
+              <span id="metric-label-em" class="metric-label">Earth to Moon</span>
               <strong id="metric-distance-em">384,400 km</strong>
             </div>
             <div>
-              <span class="metric-label">Artemis Distance from Earth</span>
+              <span id="metric-label-ae" class="metric-label">Artemis Distance from Earth</span>
               <strong id="metric-distance-ae">Loading</strong>
             </div>
             <div>
-              <span class="metric-label">Artemis Distance from Moon</span>
+              <span id="metric-label-am" class="metric-label">Artemis Distance from Moon</span>
               <strong id="metric-distance-am">Loading</strong>
             </div>
             <div>
-              <span class="metric-label">Artemis Speed</span>
+              <span id="metric-label-speed" class="metric-label">Artemis Speed</span>
               <strong id="metric-speed">Loading</strong>
             </div>
           </div>
         </section>
 
         <section class="panel feed-panel">
-          <p class="eyebrow">Mission Nodes and Live News</p>
+          <p id="feed-eyebrow" class="eyebrow">Mission Nodes and Live News</p>
           <ul id="checkpoint-list" class="checkpoint-list"></ul>
         </section>
       </aside>
@@ -93,7 +101,8 @@
   <div id="news-modal" class="news-modal" hidden>
     <div class="news-backdrop"></div>
     <section class="news-dialog" aria-labelledby="news-title">
-      <p class="eyebrow">Live News</p>
+      <button class="news-close-btn" aria-label="Close">&#x2715;</button>
+      <p id="news-eyebrow" class="eyebrow">Live News</p>
       <h2 id="news-title">Launch</h2>
       <p id="news-time" class="detail-time"></p>
       <img id="news-image" class="detail-image" src="" alt="Mission news image">
@@ -105,6 +114,6 @@
   <div id="orion-card" class="orion-card" hidden></div>
   <div id="node-card" class="orion-card" hidden></div>
 
-  <script type="module" src="./app.js"></script>
+  <script type="module" src="./src/app.js"></script>
 </body>
 </html>

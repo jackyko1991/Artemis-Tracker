@@ -13,6 +13,16 @@ python3 -m http.server 8000
 
 ES modules require a server — opening `index.html` directly won't work.
 
+## Cache News Images Locally
+
+```bash
+node scripts/cache-news-images.mjs
+```
+
+This downloads the current checkpoint article images into `assets/news/` and writes
+`assets/news/manifest.json`. The app loads that manifest at startup and prefers the
+cached local files over remote hotlinks.
+
 ## Deploy
 
 Push to `main` — GitHub Actions deploys automatically.

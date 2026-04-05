@@ -35,10 +35,11 @@ body {
 
 body {
   min-height: 100vh;
+  font-size: 1.15rem;
 }
 
 .app-shell {
-  width: min(1400px, calc(100vw - 24px));
+  width: calc(100vw - 24px);
   height: 100vh;
   margin: 0 auto;
   padding: 16px 0;
@@ -47,30 +48,67 @@ body {
   gap: 16px;
 }
 
-.about-block {
-  position: relative;
+.info-actions {
+  display: flex;
+  gap: 8px;
   flex-shrink: 0;
+  align-items: flex-start;
 }
 
-.about-btn {
+.info-block {
+  position: relative;
+}
+
+.info-btn {
   white-space: nowrap;
+}
+
+.info-btn.is-open {
+  color: var(--bg-top);
+  background: linear-gradient(135deg, rgba(150, 240, 216, 0.96), rgba(142, 209, 255, 0.9));
+  border-color: rgba(150, 240, 216, 0.85);
+  box-shadow: 0 10px 24px rgba(150, 240, 216, 0.22);
+}
+
+.lang-select {
+  appearance: none;
+  min-width: 132px;
+  padding-right: 34px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(231, 238, 248, 0.95) 50%),
+    linear-gradient(135deg, rgba(231, 238, 248, 0.95) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 2px),
+    calc(100% - 12px) calc(50% - 2px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.lang-select:focus {
+  outline: 1px solid rgba(150, 240, 216, 0.8);
+  outline-offset: 2px;
 }
 
 .about-panel {
   display: block;
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  width: min(560px, 92vw);
-  max-height: 80vh;
+  position: fixed;
+  top: 78px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90vw;
+  max-height: calc(100vh - 118px);
   overflow-y: auto;
-  padding: 18px 20px;
-  border-radius: 20px;
+  padding: 26px clamp(20px, 2.4vw, 36px) 30px;
+  border-radius: 22px;
   border: 1px solid var(--panel-border);
-  background: rgba(7, 14, 25, 0.96);
+  background: rgba(7, 14, 25, 0.97);
   box-shadow: var(--shadow);
   z-index: 20;
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(16px);
+}
+
+#tech-panel {
+  width: 90vw;
 }
 
 .about-panel[hidden] { display: none; }
@@ -80,33 +118,110 @@ body {
   border-radius: 10px;
   margin: 8px 0 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: zoom-in;
 }
+.about-map-link { display: block; }
+.about-map-link:hover .about-map { opacity: 0.85; }
 
-.about-panel h3 {
-  margin: 12px 0 6px;
-  font-size: 0.95rem;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.about-panel h3:first-child { margin-top: 0; }
-
-.about-panel p,
-.about-panel ul {
-  margin: 0 0 10px;
-  font-size: 0.88rem;
-  line-height: 1.5;
-  color: var(--text);
-}
-
-.about-panel ul {
-  padding-left: 18px;
-}
+/* (legacy selectors kept for .about-panel direct children if any) */
 
 .about-note {
   color: var(--muted) !important;
   font-style: italic;
+}
+
+/* (tab styles removed, replaced with three independent panel buttons) */
+
+/* ── Pane shared styles ── */
+.about-pane h3 {
+  margin: 16px 0 8px;
+  font-size: 1.3rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.about-pane h3:first-child { margin-top: 0; }
+
+.about-pane p,
+.about-pane ul,
+.about-pane ol {
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.about-pane ul { padding-left: 18px; }
+.about-pane {
+  width: 100%;
+}
+
+/* ── Tech Note 2-column grid ── */
+.tech-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 32px;
+  align-items: start;
+}
+
+.tech-col h3:first-child { margin-top: 0; }
+
+/* ── Tech Note ── */
+.tech-pre {
+  background: rgba(0,0,0,0.45);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--accent);
+  overflow-x: auto;
+  white-space: pre;
+  margin: 0 0 12px;
+  font-family: "Courier New", monospace;
+}
+.tech-pre code { font-family: inherit; }
+
+.tech-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+  margin: 8px 0 12px;
+}
+.tech-table th, .tech-table td {
+  padding: 5px 10px;
+  text-align: left;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.tech-table th {
+  background: rgba(255,255,255,0.07);
+  font-weight: 600;
+  color: var(--accent);
+}
+.tech-table tr:nth-child(2) td { color: var(--muted); font-style: italic; }
+
+.about-pane .katex-display {
+  margin: 10px 0 12px;
+  overflow-x: auto;
+}
+
+/* ── Terminology tab ── */
+.terms-list {
+  margin: 0;
+  padding: 0;
+}
+.terms-list dt {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 1.25rem;
+  margin-top: 16px;
+}
+.terms-list dt:first-child { margin-top: 0; }
+.terms-list dd {
+  margin: 3px 0 0 16px;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--text);
 }
 
 .topbar {
@@ -118,7 +233,7 @@ body {
 
 .topbar h1 {
   margin: 6px 0 0;
-  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-size: clamp(1.8rem, 2.6vw, 3rem);
   max-width: none;
   white-space: nowrap;
   line-height: 0.95;
@@ -129,7 +244,7 @@ body {
   color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  font-size: 0.72rem;
+  font-size: 1.1rem;
 }
 
 .panel {
@@ -145,6 +260,7 @@ body {
 .detail-time {
   margin: 0;
   color: var(--muted);
+  font-size: 1.1rem;
 }
 
 .status-value {
@@ -186,6 +302,21 @@ body {
   pointer-events: none;
 }
 
+.viewer-footnote {
+  position: absolute;
+  left: 16px;
+  bottom: 56px;
+  max-width: min(460px, calc(100% - 32px));
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(3, 7, 13, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
 .legend,
 .ghost-button {
   pointer-events: auto;
@@ -198,7 +329,7 @@ body {
 }
 
 .data-badge {
-  font-size: 0.75rem;
+  font-size: 1.1rem;
   color: var(--muted);
   padding: 5px 10px;
   border-radius: 999px;
@@ -233,9 +364,24 @@ body {
   pointer-events: none;
   min-width: 200px;
   max-width: 300px;
+  --leader-length: 32px;
+  --leader-angle: 0rad;
 }
 
 .orion-card[hidden] { display: none; }
+
+#orion-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: var(--leader-length);
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 132, 82, 0.12), rgba(255, 132, 82, 0.92));
+  box-shadow: 0 0 10px rgba(255, 132, 82, 0.45);
+  transform-origin: 100% 50%;
+  transform: translate(-100%, -50%) rotate(var(--leader-angle));
+}
 
 .orion-card-dl {
   margin: 10px 0 0;
@@ -246,13 +392,13 @@ body {
 
 .orion-card-dl dt {
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 1.2rem;
 }
 
 .orion-card-dl dd {
   margin: 0;
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 1.4rem;
   text-align: right;
 }
 
@@ -264,7 +410,7 @@ body {
   border-radius: 999px;
   background: rgba(3, 7, 13, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.88rem;
+  font-size: 1.2rem;
 }
 
 .legend span {
@@ -329,12 +475,12 @@ body {
 .metrics strong {
   display: block;
   margin-top: 4px;
-  font-size: 1.35rem;
+  font-size: 2.2rem;
 }
 
 .detail-panel h2 {
   margin: 10px 0 8px;
-  font-size: 1.6rem;
+  font-size: 2.2rem;
 }
 
 .detail-summary {
@@ -411,7 +557,7 @@ body {
 .checkpoint-item span {
   color: var(--muted);
   margin-top: 4px;
-  font-size: 0.92rem;
+  font-size: 1.2rem;
 }
 
 .news-modal[hidden] {
@@ -423,7 +569,7 @@ body {
   top: 24px;
   left: 24px;
   width: min(360px, 28vw);
-  z-index: 8;
+  z-index: 20;
   pointer-events: none;
 }
 
@@ -438,6 +584,28 @@ body {
   border: 1px solid rgba(173, 216, 255, 0.18);
   background: rgba(7, 14, 25, 0.94);
   box-shadow: var(--shadow);
+  /* Receive pointer events even when parent .news-modal has pointer-events: none on desktop */
+  pointer-events: auto;
+}
+
+.news-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  line-height: 1;
+  z-index: 1;
+}
+
+.news-close-btn:hover {
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 @media (max-width: 1200px) {
@@ -486,7 +654,7 @@ body {
 
   .topbar h1 {
     white-space: normal;
-    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    font-size: clamp(1.4rem, 5vw, 2rem);
   }
 
   .layout {
@@ -498,9 +666,34 @@ body {
     min-height: 40vh;
   }
 
+  #orion-card {
+    display: none !important;
+  }
+
   .viewer-overlay {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .viewer-footnote {
+    left: 12px;
+    right: 12px;
+    bottom: 72px;
+    max-width: none;
+    font-size: 0.88rem;
+  }
+
+  .about-panel,
+  #tech-panel {
+    top: 72px;
+    width: calc(100vw - 20px);
+    max-height: calc(100vh - 92px);
+    padding: 18px 16px 22px;
+  }
+
+  .tech-cols {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 
   .viewer-actions {
