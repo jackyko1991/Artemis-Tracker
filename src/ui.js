@@ -97,11 +97,10 @@ export function openNewsModalAt(checkpointId, anchorElement = null) {
   document.querySelector("#news-summary").textContent = checkpoint.summary;
   document.querySelector("#news-link").href = checkpoint.sourceUrl;
   const newsImg = document.querySelector("#news-image");
-  const imageUrl = checkpoint.imageUrl || missionModule.getCachedNewsImage(checkpointId);
-  if (imageUrl) {
+  if (checkpoint.imageUrl) {
     newsImg.style.display = "";
     newsImg.onerror = () => { newsImg.style.display = "none"; };
-    newsImg.src = imageUrl;
+    newsImg.src = checkpoint.imageUrl;
   } else {
     newsImg.removeAttribute("src");
     newsImg.style.display = "none";
