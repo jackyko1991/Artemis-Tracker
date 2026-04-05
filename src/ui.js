@@ -3,9 +3,25 @@ import { getSceneTimeMs, isCheckpointFuture } from "./mission.js";
 import { applyCheckpointTranslations, getInitialLanguage, getSupportedLanguages, getTranslations } from "./i18n.js";
 
 const newsModal = document.querySelector("#news-modal");
+const newsDialog = document.querySelector(".news-dialog");
 export const isTouchPrimary = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 const langSelect = document.querySelector("#lang-select");
 let currentLanguage = getInitialLanguage();
+let desktopNewsCloseTimer = null;
+
+function cancelDesktopNewsClose() {
+  if (desktopNewsCloseTimer) {
+    window.clearTimeout(desktopNewsCloseTimer);
+    desktopNewsCloseTimer = null;
+  }
+}
+
+function scheduleDesktopNewsClose() {
+  cancelDesktopNewsClose();
+  desktopNewsCloseTimer = window.setTimeout(() => {
+    closeNewsModal();
+  }, 80);
+}
 
 export function getCurrentLanguage() {
   return currentLanguage;
@@ -72,6 +88,7 @@ export function applyLanguage(lang, options = {}) {
 }
 
 export function openNewsModalAt(checkpointId, anchorElement = null) {
+  cancelDesktopNewsClose();
   const checkpoint = missionModule.getCheckpoint(checkpointId);
   if (!checkpoint) return;
 
@@ -80,10 +97,11 @@ export function openNewsModalAt(checkpointId, anchorElement = null) {
   document.querySelector("#news-summary").textContent = checkpoint.summary;
   document.querySelector("#news-link").href = checkpoint.sourceUrl;
   const newsImg = document.querySelector("#news-image");
-  if (checkpoint.imageUrl) {
+  const imageUrl = checkpoint.imageUrl || missionModule.getCachedNewsImage(checkpointId);
+  if (imageUrl) {
     newsImg.style.display = "";
     newsImg.onerror = () => { newsImg.style.display = "none"; };
-    newsImg.src = checkpoint.imageUrl;
+    newsImg.src = imageUrl;
   } else {
     newsImg.removeAttribute("src");
     newsImg.style.display = "none";
@@ -94,21 +112,27 @@ export function openNewsModalAt(checkpointId, anchorElement = null) {
   if (anchorElement && window.innerWidth > 1200) {
     const rect = anchorElement.getBoundingClientRect();
     const modalWidth = Math.min(360, window.innerWidth * 0.28);
-    const preferredLeft = rect.left - modalWidth - 14;
-    const fallbackLeft = Math.min(rect.right + 14, window.innerWidth - modalWidth - 16);
-    const left = preferredLeft >= 16 ? preferredLeft : fallbackLeft;
-    const panelHeight = window.innerHeight * 0.8;
-    const minTop = window.innerHeight * 0.1;
-    const maxTop = window.innerHeight * 0.1;
-    const top = Math.min(
-      Math.max(minTop, rect.top - 10),
-      Math.max(minTop, window.innerHeight - panelHeight - maxTop)
-    );
-    newsModal.style.left = `${left}px`;
-    newsModal.style.top = `${top}px`;
     newsModal.style.bottom = "auto";
     newsModal.style.right = "auto";
     newsModal.style.width = `${modalWidth}px`;
+    newsModal.removeAttribute("hidden");
+
+    requestAnimationFrame(() => {
+      const dialogHeight = newsDialog?.offsetHeight || 0;
+      const preferredLeft = rect.left - modalWidth - 14;
+      const fallbackLeft = rect.right + 14;
+      const left = preferredLeft >= 16
+        ? preferredLeft
+        : Math.min(fallbackLeft, window.innerWidth - modalWidth - 16);
+      const top = Math.min(
+        Math.max(16, rect.top),
+        Math.max(16, window.innerHeight - dialogHeight - 16)
+      );
+      newsModal.style.left = `${left}px`;
+      newsModal.style.top = `${top}px`;
+    });
+    newsModal.style.display = "block";
+    return;
   } else {
     newsModal.style.left = "";
     newsModal.style.top = "";
@@ -122,6 +146,7 @@ export function openNewsModalAt(checkpointId, anchorElement = null) {
 }
 
 export function closeNewsModal() {
+  cancelDesktopNewsClose();
   newsModal.setAttribute("hidden", "");
   newsModal.style.display = "none";
 }
@@ -152,7 +177,12 @@ export function renderCheckpointList() {
         }
       });
     } else {
-      // Desktop: hover shows card, click opens NASA source
+      // Desktop: hover previews the card, click opens the NASA source
+      const showDesktopPreview = () => {
+        cancelDesktopNewsClose();
+        missionModule.setDetail(checkpoint.id);
+        openNewsModalAt(checkpoint.id, button);
+      };
       button.addEventListener("click", () => {
         missionModule.setDetail(checkpoint.id);
         missionModule.focusRef.fn?.(checkpoint.id);
@@ -160,13 +190,12 @@ export function renderCheckpointList() {
           window.open(checkpoint.sourceUrl, "_blank", "noopener,noreferrer");
         }
       });
-      button.addEventListener("mouseenter", () => {
-        missionModule.setDetail(checkpoint.id);
-        openNewsModalAt(checkpoint.id, button);
-      });
-      // Only close modal if the pointer leaves toward something outside the modal
+      button.addEventListener("mouseenter", showDesktopPreview);
+      button.addEventListener("mousemove", showDesktopPreview);
       button.addEventListener("mouseleave", (e) => {
-        if (!newsModal.contains(e.relatedTarget)) closeNewsModal();
+        if (!e.relatedTarget?.closest?.(".news-dialog")) {
+          scheduleDesktopNewsClose();
+        }
       });
       button.addEventListener("focus", () => {
         missionModule.setDetail(checkpoint.id);
@@ -207,6 +236,10 @@ document.querySelector(".news-dialog").addEventListener("click", (e) => {
   e.stopPropagation();
 });
 
+newsDialog.addEventListener("mouseenter", () => {
+  cancelDesktopNewsClose();
+});
+
 // Close button inside dialog
 document.querySelector(".news-close-btn").addEventListener("click", (e) => {
   e.stopPropagation();
@@ -215,7 +248,9 @@ document.querySelector(".news-close-btn").addEventListener("click", (e) => {
 
 // On desktop, close modal when the mouse leaves the modal unless it's going back to a checkpoint button
 newsModal.addEventListener("mouseleave", (e) => {
-  if (!e.relatedTarget?.closest?.(".checkpoint-item")) closeNewsModal();
+  if (!e.relatedTarget?.closest?.(".checkpoint-item")) {
+    scheduleDesktopNewsClose();
+  }
 });
 
 // --- Three independent info panel toggles ---

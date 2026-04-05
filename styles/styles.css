@@ -52,7 +52,7 @@ body {
   display: flex;
   gap: 8px;
   flex-shrink: 0;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .info-block {
@@ -71,8 +71,14 @@ body {
 }
 
 .lang-select {
+  display: block;
   appearance: none;
   min-width: 132px;
+  min-height: 42px;
+  line-height: 1.2;
+  text-align: center;
+  text-align-last: center;
+  padding-left: 18px;
   padding-right: 34px;
   background-image:
     linear-gradient(45deg, transparent 50%, rgba(231, 238, 248, 0.95) 50%),
@@ -97,6 +103,7 @@ body {
   transform: translateX(-50%);
   width: 90vw;
   max-height: calc(100vh - 118px);
+  overflow-x: hidden;
   overflow-y: auto;
   padding: 26px clamp(20px, 2.4vw, 36px) 30px;
   border-radius: 22px;
@@ -154,17 +161,19 @@ body {
 .about-pane ul { padding-left: 18px; }
 .about-pane {
   width: 100%;
+  min-width: 0;
 }
 
 /* ── Tech Note 2-column grid ── */
 .tech-cols {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 32px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0 28px;
   align-items: start;
 }
 
 .tech-col h3:first-child { margin-top: 0; }
+.tech-col { min-width: 0; }
 
 /* ── Tech Note ── */
 .tech-pre {
@@ -231,6 +240,44 @@ body {
   align-items: flex-start;
 }
 
+.brand-block {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.brand-logos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.brand-logo {
+  display: block;
+  object-fit: contain;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.brand-logo-nasa {
+  width: 42px;
+  height: 42px;
+}
+
+.brand-logo-artemis {
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
 .topbar h1 {
   margin: 6px 0 0;
   font-size: clamp(1.8rem, 2.6vw, 3rem);
@@ -275,6 +322,7 @@ body {
 }
 
 .viewer-panel {
+  --viewer-note-clearance: 72px;
   position: relative;
   min-height: 0;
   overflow: hidden;
@@ -305,15 +353,15 @@ body {
 .viewer-footnote {
   position: absolute;
   left: 16px;
-  bottom: 56px;
-  max-width: min(460px, calc(100% - 32px));
+  top: 16px;
+  bottom: auto;
+  max-width: min(72ch, calc(100% - 32px));
   color: var(--muted);
   font-size: 0.95rem;
   line-height: 1.35;
-  padding: 6px 10px;
-  border-radius: 12px;
-  background: rgba(3, 7, 13, 0.68);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   pointer-events: none;
 }
 
@@ -331,10 +379,10 @@ body {
 .data-badge {
   font-size: 1.1rem;
   color: var(--muted);
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: rgba(3, 7, 13, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   pointer-events: none;
 }
 
@@ -458,6 +506,7 @@ body {
   gap: 16px;
   min-height: 0;
   overflow: auto;
+  scrollbar-gutter: stable;
   padding-right: 6px;
 }
 
@@ -476,6 +525,7 @@ body {
   display: block;
   margin-top: 4px;
   font-size: 2.2rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .detail-panel h2 {
@@ -576,8 +626,8 @@ body {
 .news-dialog {
   position: relative;
   width: 100%;
-  height: 80vh;
-  max-height: 80vh;
+  height: auto;
+  max-height: min(80vh, calc(100vh - 48px));
   overflow: auto;
   padding: 18px;
   border-radius: 20px;
@@ -608,6 +658,12 @@ body {
   background: rgba(255, 255, 255, 0.08);
 }
 
+@media (min-width: 981px) {
+  html {
+    font-size: 74%;
+  }
+}
+
 @media (max-width: 1200px) {
   .news-modal {
     position: fixed;
@@ -622,8 +678,8 @@ body {
 
   .news-dialog {
     width: auto;
-    height: 80vh;
-    max-height: 80vh;
+    height: auto;
+    max-height: min(80vh, calc(100vh - 32px));
   }
 }
 
@@ -652,6 +708,25 @@ body {
     min-width: 0;
   }
 
+  .brand-row {
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .brand-logos {
+    gap: 8px;
+  }
+
+  .brand-logo-nasa {
+    width: 34px;
+    height: 34px;
+  }
+
+  .brand-logo-artemis {
+    width: 34px;
+    height: 34px;
+  }
+
   .topbar h1 {
     white-space: normal;
     font-size: clamp(1.4rem, 5vw, 2rem);
@@ -663,6 +738,7 @@ body {
   }
 
   .viewer-panel {
+    --viewer-note-clearance: 96px;
     min-height: 40vh;
   }
 
@@ -678,9 +754,10 @@ body {
   .viewer-footnote {
     left: 12px;
     right: 12px;
-    bottom: 72px;
+    bottom: var(--viewer-note-clearance);
     max-width: none;
     font-size: 0.88rem;
+    white-space: normal;
   }
 
   .about-panel,
@@ -706,5 +783,235 @@ body {
     grid-template-rows: auto auto auto;
     overflow: visible;
     padding-right: 0;
+  }
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+  body {
+    font-size: 1rem;
+  }
+
+  .app-shell {
+    width: calc(100vw - 10px);
+    min-height: 100svh;
+    padding: 6px 0 max(8px, env(safe-area-inset-bottom));
+    gap: 6px;
+  }
+
+  .topbar {
+    gap: 8px;
+  }
+
+  .brand-block {
+    gap: 4px;
+  }
+
+  .brand-row {
+    gap: 8px;
+  }
+
+  .brand-logos {
+    gap: 6px;
+  }
+
+  .brand-logo-nasa,
+  .brand-logo-artemis {
+    width: 30px;
+    height: 30px;
+  }
+
+  .eyebrow {
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+  }
+
+  .topbar h1 {
+    margin-top: 2px;
+    font-size: clamp(1.2rem, 5.4vw, 1.55rem);
+    line-height: 1.02;
+  }
+
+  .info-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .info-block {
+    flex: 1 1 calc(50% - 3px);
+    min-width: 0;
+  }
+
+  .info-btn,
+  .lang-select,
+  .ghost-button {
+    width: 100%;
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 0.92rem;
+  }
+
+  .lang-select {
+    min-width: 0;
+    padding-left: 12px;
+    padding-right: 30px;
+    background-position:
+      calc(100% - 16px) calc(50% - 2px),
+      calc(100% - 10px) calc(50% - 2px);
+  }
+
+  .about-panel,
+  #tech-panel {
+    top: max(58px, env(safe-area-inset-top) + 8px);
+    width: calc(100vw - 12px);
+    max-height: calc(100svh - 70px);
+    padding: 16px 14px 18px;
+    border-radius: 18px;
+  }
+
+  .about-pane h3 {
+    font-size: 1.04rem;
+  }
+
+  .about-pane p,
+  .about-pane ul,
+  .about-pane ol,
+  .tech-table,
+  .terms-list dd,
+  .terms-list dt {
+    font-size: 0.97rem;
+    line-height: 1.48;
+  }
+
+  .tech-pre {
+    max-width: 100%;
+    padding: 8px 10px;
+    font-size: 0.86rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    overflow-x: hidden;
+  }
+
+  .tech-table {
+    table-layout: fixed;
+  }
+
+  .tech-table th,
+  .tech-table td {
+    padding: 4px 6px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .about-pane .katex-display {
+    margin: 8px 0 10px;
+    overflow-x: hidden;
+  }
+
+  .about-pane .katex-display > .katex {
+    font-size: 0.82em;
+    max-width: 100%;
+  }
+
+  .layout {
+    gap: 6px;
+  }
+
+  .viewer-panel {
+    --viewer-note-clearance: 78px;
+    min-height: 52svh;
+    height: 52svh;
+    border-radius: 20px;
+  }
+
+  .viewer-overlay {
+    inset: auto 10px 10px 10px;
+    gap: 6px;
+    align-items: stretch;
+  }
+
+  .data-badge {
+    max-width: 100%;
+    font-size: 0.84rem;
+    line-height: 1.3;
+  }
+
+  .viewer-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .viewer-footnote {
+    left: 10px;
+    top: 10px;
+    right: auto;
+    bottom: auto;
+    max-width: min(62vw, 240px);
+    font-size: 0.78rem;
+    line-height: 1.3;
+  }
+
+  .scene-error {
+    top: 10px;
+    right: 10px;
+    max-width: calc(100% - 20px);
+    padding: 10px 12px;
+    font-size: 0.84rem;
+  }
+
+  .sidebar {
+    gap: 10px;
+  }
+
+  .panel {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    margin-top: 10px;
+  }
+
+  .metrics strong {
+    font-size: clamp(1.1rem, 4.7vw, 1.45rem);
+  }
+
+  .metric-label {
+    font-size: 0.82rem;
+    line-height: 1.25;
+  }
+
+  .checkpoint-list {
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .checkpoint-item button {
+    padding: 10px 12px;
+    border-radius: 14px;
+  }
+
+  .checkpoint-item span {
+    font-size: 0.96rem;
+  }
+
+  .news-modal {
+    width: calc(100% - 16px);
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .news-dialog {
+    height: auto;
+    max-height: min(72svh, calc(100svh - 20px));
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .detail-image {
+    height: 120px;
   }
 }

@@ -176,6 +176,26 @@ export const TRANSLATIONS = {
           <tr><td>idx&nbsp;8</td><td>40,839</td><td>T + 27.4 h</td></tr>
         </table>
         <p>If we simply interpolate between idx&nbsp;7 and idx&nbsp;8, the path never drops below 19,087 km. That makes the TLI node look like it is floating far above Earth instead of happening near perigee altitude.</p>
+        <h3>Moon alignment note</h3>
+        <p>The Moon display is visually adjusted for readability. The app starts from the raw HORIZONS lunar ephemeris, keeps the Moon close to observation-based sky values, and then applies only a small phase correction so the flyby remains readable. The goal is to stay mostly faithful to the real Moon motion while avoiding a visually misleading miss at the flyby checkpoint.</p>
+        <h3>Constraint-guided agentic tuning</h3>
+        <p>The current rendering uses a <strong>constraint-guided agentic tuning</strong> approach. In plain terms, the code tests candidate display transforms, checks them against physical and observational constraints, prints the resulting metrics, and only keeps solutions that make sense as a whole.</p>
+        <p>Current validation flow:</p>
+        <ol>
+          <li><strong>Moon first:</strong> start from raw HORIZONS Moon ephemeris and allow only a small phase correction, checked against sky-observation values and motion direction.</li>
+          <li><strong>Orion second:</strong> keep the Orion trajectory shape, then apply a rigid display fit with rotation and uniform scale so the flyby loop points toward the Moon without locally bending the path.</li>
+          <li><strong>Constraint report:</strong> compare the result against the flyby geometry checks and print a pass/fail checklist so tuning can be judged numerically instead of by eye alone.</li>
+        </ol>
+        <p>Current agentic tuning checks:</p>
+        <ul>
+          <li><strong>Candidate generation:</strong> the solver tries multiple Moon phase candidates and Orion rigid-fit candidates instead of assuming one hand-picked visual answer.</li>
+          <li><strong>Observation score:</strong> topocentric RA/Dec, azimuth, altitude, and distance are compared against reference sky values, with a small hour adjustment allowance because date-only Moon snapshots can shift if the observation hour is wrong.</li>
+          <li><strong>Motion check:</strong> the displayed Moon must continue moving in the expected top-down direction before flyby.</li>
+          <li><strong>Flyby geometry:</strong> Moon-to-Orion flyby distance, Earth-centered flyby angle, and loop-enclosure behavior are scored together so the flyby stays both readable and physically constrained.</li>
+          <li><strong>Raw-data closeness:</strong> large Moon remaps are penalized so the Moon stays near the raw ephemeris, while Orion fitting is preferred on the display side.</li>
+          <li><strong>Transform audit:</strong> the Orion rigid fit reports how far it moved from the raw trajectory, and the chosen solution is checked against a printed pass/fail constraint report.</li>
+        </ul>
+        <p>This matters because a result can look visually convincing while still failing the physical checks. The app therefore treats the printed constraint report as part of the model, not just a debugging extra.</p>
       </div>
       <div class="tech-col">
         <h3>Trans-Lunar Injection (TLI)</h3>
@@ -199,28 +219,6 @@ export const TRANSLATIONS = {
         <p>Kepler's equation is then solved at 20-minute steps via <strong>Newton–Raphson</strong> iteration:</p>
         $$M = E - e\\sin E \\quad\\Longrightarrow\\quad E_{n+1} = E_n + \\frac{M - E_n + e\\sin E_n}{1 - e\\cos E_n}$$
         <p>This generates a smooth, physically accurate arc from first perigee through apogee to the TLI second perigee, filling the 3 h data gap with &lt;9 min timing error. A tangent-matched outbound bridge then connects the synthetic perigee to the first post-TLI HORIZONS point at 40,839 km, so the turn away from Earth stays smooth.</p>
-        <h3>Moon alignment note</h3>
-        <p>The Moon display is visually adjusted for readability. The app starts from the raw HORIZONS lunar ephemeris, keeps the Moon close to observation-based sky values, and then applies only a small phase correction so the flyby remains readable. The goal is to stay mostly faithful to the real Moon motion while avoiding a visually misleading miss at the flyby checkpoint.</p>
-        <h3>Constraint-guided agentic tuning</h3>
-        <p>The current rendering uses a <strong>constraint-guided agentic tuning</strong> approach. In plain terms, the code tests candidate display transforms, checks them against physical and observational constraints, prints the resulting metrics, and only keeps solutions that make sense as a whole.</p>
-        <p>Current validation flow:</p>
-        <ol>
-          <li><strong>Moon first:</strong> start from raw HORIZONS Moon ephemeris and allow only a small phase correction, checked against sky-observation values and motion direction.</li>
-          <li><strong>Orion second:</strong> keep the Orion trajectory shape, then apply a rigid display fit with rotation and uniform scale so the flyby loop points toward the Moon without locally bending the path.</li>
-          <li><strong>Constraint report:</strong> compare the result against the flyby geometry checks and print a pass/fail checklist so tuning can be judged numerically instead of by eye alone.</li>
-        </ol>
-        <p>Current constraints:</p>
-        <ul>
-          <li><strong>Observer check:</strong> topocentric RA/Dec, azimuth, altitude, and distance are compared against reference sky-observation values around the flyby window.</li>
-          <li><strong>Hour adjustment:</strong> observation-hour offsets are considered because date-only Moon snapshots can shift noticeably if the underlying hour is wrong.</li>
-          <li><strong>Motion direction:</strong> the displayed Moon must continue moving in the expected top-down direction before flyby.</li>
-          <li><strong>Flyby distance:</strong> the Moon-to-Orion flyby separation is pushed toward the network and mission-planning closest-approach distance.</li>
-          <li><strong>Flyby angle:</strong> the Earth-centered angle between Orion's flyby direction and the Moon is kept small.</li>
-          <li><strong>Loop enclosure:</strong> the Orion flyby loop should wrap around the Moon, with the Moon staying close to the center of that loop.</li>
-          <li><strong>Raw-data closeness:</strong> large Moon remaps are penalized so the Moon stays close to the raw ephemeris, while Orion fitting is preferred on the display side.</li>
-          <li><strong>Transform size:</strong> the Orion rigid fit reports how far it moved from the raw trajectory, so any display correction stays auditable.</li>
-        </ul>
-        <p>This matters because a result can look visually convincing while still failing the physical checks. The app therefore treats the printed constraint report as part of the model, not just a debugging extra.</p>
         <p>A large-looking tilt is not automatically unrealistic. In the real solar system, the Moon's orbit is inclined by about <strong>5°</strong> to the Earth-Sun orbital plane, and Earth's spin axis is tilted by about <strong>23.4°</strong>. Depending on the viewing angle, those real tilts can make the Moon path look strongly slanted relative to Earth's equator.</p>
         <h3>Spline rendering</h3>
         <p>Post-TLI outbound leg uses <strong>centripetal Catmull–Rom</strong> (\\(\\alpha=0.5\\)); return leg uses <strong>chordal</strong> (\\(\\alpha=1\\)) to prevent the spline cutting behind Earth on the final approach arc.</p>
@@ -344,6 +342,26 @@ export const TRANSLATIONS = {
           <tr><td>idx&nbsp;8</td><td>40,839</td><td>T + 27.4 h</td></tr>
         </table>
         <p>如果只在 idx&nbsp;7 與 idx&nbsp;8 間做插值，路徑最低只會到 19,087 km，看起來就像 TLI 節點漂浮在地球上方很遠處，而不是在近地點附近點火。</p>
+        <h3>月球對齊說明</h3>
+        <p>月球顯示為了閱讀性做了視覺調整。程式先從原始 HORIZONS 月球星曆出發，盡量維持它接近觀測到的星圖位置，再只加入小幅相位修正，讓飛越畫面比較容易閱讀。目標是在保留真實月球運動感的前提下，避免飛越檢查點看起來明顯錯開。</p>
+        <h3>約束導向代理式微調</h3>
+        <p>目前的渲染做法採用 <strong>約束導向代理式微調</strong>。簡單說，程式會測試多組候選顯示轉換，用物理與觀測約束去評分，列出結果數值，再保留整體上最合理的一組，而不是直接寫死單一視覺答案。</p>
+        <p>目前的驗證流程：</p>
+        <ol>
+          <li><strong>先處理月球：</strong>從原始 HORIZONS 月球星曆出發，只允許小幅相位修正，並用星圖觀測值與運動方向檢查。</li>
+          <li><strong>再處理獵戶座：</strong>盡量保留獵戶座軌跡形狀，再用剛體顯示擬合，也就是旋轉加上等比例縮放，讓飛越環繞更接近月球，而不是局部硬彎軌跡。</li>
+          <li><strong>輸出約束報告：</strong>把結果和飛越幾何約束逐項比對，輸出 pass/fail 清單，讓調整不是只靠肉眼判斷。</li>
+        </ol>
+        <p>目前代理式微調的檢查項目包括：</p>
+        <ul>
+          <li><strong>候選解生成：</strong>求解器會測試多組月球相位候選與獵戶座剛體擬合候選，而不是直接假設一個手動指定的視覺答案。</li>
+          <li><strong>觀測評分：</strong>把飛越前後的參考天象觀測值，拿來比對地面觀測的赤經／赤緯、方位角、高度角與距離。因為如果只知道日期、不知道觀測小時，月球位置可能偏移，所以也會保留小幅的小時調整空間。</li>
+          <li><strong>運動檢查：</strong>顯示出的月球在飛越前，必須維持預期的俯視運動方向。</li>
+          <li><strong>飛越幾何：</strong>月球與獵戶座的飛越距離、地心飛越角度，以及飛越環對月球的包絡關係會一起評分，讓畫面同時兼顧可讀性與物理約束。</li>
+          <li><strong>接近原始資料：</strong>如果月球顯示偏離原始星曆太多，就會被扣分，因此會優先把顯示調整放在獵戶座那一側。</li>
+          <li><strong>轉換量稽核：</strong>獵戶座剛體擬合後，會回報它偏離原始軌跡多少，並搭配輸出的 pass/fail 約束報告，方便判斷這個顯示修正是否仍然合理。</li>
+        </ul>
+        <p>這一點很重要，因為有些結果看起來順眼，實際上卻可能違反物理條件。所以這裡會把輸出的約束報告視為模型的一部分，而不是單純的除錯資訊。</p>
       </div>
       <div class="tech-col">
         <h3>月球轉移注入（TLI）</h3>
@@ -367,28 +385,6 @@ export const TRANSLATIONS = {
         <p>接著以 20 分鐘步長，透過 <strong>牛頓–拉弗森</strong> 法求解克卜勒方程：</p>
         $$M = E - e\\sin E \\quad\\Longrightarrow\\quad E_{n+1} = E_n + \\frac{M - E_n + e\\sin E_n}{1 - e\\cos E_n}$$
         <p>這樣可產生從第一個近地點、經過遠地點，再到第二次 TLI 近地點的平滑且物理上合理的弧線，把 3 小時資料缺口補起來，時間誤差小於 9 分鐘。之後再用切線匹配的外推橋接段，把合成近地點接到 40,839 km 的第一個 TLI 後 HORIZONS 點，讓離地轉向保持平順。</p>
-        <h3>月球對齊說明</h3>
-        <p>月球顯示為了閱讀性做了視覺調整。程式先從原始 HORIZONS 月球星曆出發，盡量維持它接近觀測到的星圖位置，再只加入小幅相位修正，讓飛越畫面比較容易閱讀。目標是在保留真實月球運動感的前提下，避免飛越檢查點看起來明顯錯開。</p>
-        <h3>約束導向代理式微調</h3>
-        <p>目前的渲染做法採用 <strong>約束導向代理式微調</strong>。簡單說，程式會測試多組候選顯示轉換，用物理與觀測約束去評分，列出結果數值，再保留整體上最合理的一組，而不是直接寫死單一視覺答案。</p>
-        <p>目前的驗證流程：</p>
-        <ol>
-          <li><strong>先處理月球：</strong>從原始 HORIZONS 月球星曆出發，只允許小幅相位修正，並用星圖觀測值與運動方向檢查。</li>
-          <li><strong>再處理獵戶座：</strong>盡量保留獵戶座軌跡形狀，再用剛體顯示擬合，也就是旋轉加上等比例縮放，讓飛越環繞更接近月球，而不是局部硬彎軌跡。</li>
-          <li><strong>輸出約束報告：</strong>把結果和飛越幾何約束逐項比對，輸出 pass/fail 清單，讓調整不是只靠肉眼判斷。</li>
-        </ol>
-        <p>目前使用的約束包括：</p>
-        <ul>
-          <li><strong>觀測檢查：</strong>把飛越前後的參考天象觀測值，拿來比對地面觀測的赤經／赤緯、方位角、高度角與距離。</li>
-          <li><strong>小時調整：</strong>因為如果只知道日期、不知道觀測小時，月球位置可能明顯偏移，所以會把觀測小時差納入考量。</li>
-          <li><strong>運動方向：</strong>顯示出的月球在飛越前，必須維持預期的俯視運動方向。</li>
-          <li><strong>飛越距離：</strong>月球與獵戶座飛越點的距離，會盡量靠近任務規劃與網路資料中的最近飛越距離。</li>
-          <li><strong>飛越角度：</strong>從地心看出去，獵戶座飛越方向與月球方向之間的夾角需要保持夠小。</li>
-          <li><strong>包絡關係：</strong>獵戶座飛越環應該大致把月球包在中央附近。</li>
-          <li><strong>接近原始資料：</strong>如果月球顯示偏離原始星曆太多，就會被扣分，因此會優先把顯示調整放在獵戶座那一側。</li>
-          <li><strong>轉換量檢查：</strong>獵戶座剛體擬合後，會回報它偏離原始軌跡多少，方便判斷這個顯示修正是否仍然合理。</li>
-        </ul>
-        <p>這一點很重要，因為有些結果看起來順眼，實際上卻可能違反物理條件。所以這裡會把輸出的約束報告視為模型的一部分，而不是單純的除錯資訊。</p>
         <p>看起來傾角很大，不一定代表不合理。在真實太陽系中，月球軌道相對地球繞日平面約傾斜 <strong>5°</strong>，而地球自轉軸本身又有約 <strong>23.4°</strong> 的傾角。從某些視角觀察時，月球路徑相對地球赤道看起來就會明顯傾斜。</p>
         <h3>樣條渲染</h3>
         <p>TLI 後外飛段使用 <strong>centripetal Catmull–Rom</strong>（\\(\\alpha=0.5\\)）；返回段使用 <strong>chordal</strong>（\\(\\alpha=1\\)），避免樣條在最後接近地球時從地球後方切過去。</p>

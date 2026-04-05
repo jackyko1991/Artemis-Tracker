@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title>NASA logo</title>
+  <circle cx="64" cy="64" r="60" fill="#0b3d91"/>
+  <path d="M20 78c19-8 38-16 57-24 10-4 20-6 31-7" fill="none" stroke="#e03c31" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="41" cy="40" r="3" fill="#fff"/>
+  <circle cx="84" cy="29" r="2.5" fill="#fff"/>
+  <circle cx="91" cy="86" r="2.5" fill="#fff"/>
+  <text x="64" y="73" text-anchor="middle" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" letter-spacing="2">NASA</text>
+</svg>

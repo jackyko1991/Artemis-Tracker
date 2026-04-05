@@ -754,13 +754,22 @@ function getMoonPosition(nowMs, moonData) {
   return horizonsLookup(moonData, nowMs).pos;
 }
 
-function buildMoonDebugTrail(moonData, nowMs, hours = 24, stepHours = 1) {
+function buildMoonDisplayOrbit(moonData, nowMs, spanDeg = 360, sampleCount = 180) {
+  if (!moonData?.length) return [];
+  const currentPos = getMoonPosition(nowMs, moonData);
+  const futurePos = getMoonPosition(nowMs + 3 * 60 * 60 * 1000, moonData);
+  const orbitNormal = getLocalPlaneNormal(moonData, nowMs);
+  const motionCross = currentPos.clone().cross(futurePos);
+  const motionSign = motionCross.dot(orbitNormal) >= 0 ? 1 : -1;
+  const spanRad = THREE.MathUtils.degToRad(spanDeg) * motionSign;
   const samples = [];
-  for (let offset = hours; offset >= 0; offset -= stepHours) {
-    const sampleTime = nowMs - offset * 60 * 60 * 1000;
+  for (let i = 0; i < sampleCount; i++) {
+    const t = i / Math.max(1, sampleCount - 1);
+    const angle = spanRad * (t - 1);
+    const pos = currentPos.clone().applyAxisAngle(orbitNormal, angle);
     samples.push({
-      ageHours: offset,
-      pos: getMoonPosition(sampleTime, moonData),
+      alpha: t,
+      pos,
     });
   }
   return samples;
@@ -1117,7 +1126,7 @@ export async function initScene(horizonsData = null, moonData = null) {
 
   // Render the Moon orbit in the same Earth-centered plane defined by the
   // free-return flyby radius and local trajectory tangent.
-  const moonTrailSampleCount = 25;
+  const moonTrailSampleCount = 180;
   const moonOrbitGeometry = new THREE.BufferGeometry();
   moonOrbitGeometry.setAttribute("position", new THREE.Float32BufferAttribute(new Float32Array(moonTrailSampleCount * 3), 3));
   moonOrbitGeometry.setAttribute("color", new THREE.Float32BufferAttribute(new Float32Array(moonTrailSampleCount * 3), 3));
@@ -1412,12 +1421,12 @@ export async function initScene(horizonsData = null, moonData = null) {
     moon.rotation.y = moonRotation;
     // Position Moon using low-precision ephemeris in ICRF equatorial frame
     moon.position.copy(getMoonPosition(nowMs, displayMoonData));
-    const moonTrail = buildMoonDebugTrail(displayMoonData, nowMs);
+    const moonTrail = buildMoonDisplayOrbit(displayMoonData, nowMs, 360, moonTrailSampleCount);
     const moonTrailPositions = moonOrbitGeometry.getAttribute("position");
     const moonTrailColors = moonOrbitGeometry.getAttribute("color");
     moonTrail.forEach((sample, index) => {
       moonTrailPositions.setXYZ(index, sample.pos.x, sample.pos.y, sample.pos.z);
-      const alpha = index / Math.max(1, moonTrail.length - 1);
+      const alpha = sample.alpha;
       const color = new THREE.Color().setHSL(
         THREE.MathUtils.lerp(0.59, 0.57, alpha),
         THREE.MathUtils.lerp(0.42, 0.68, alpha),
