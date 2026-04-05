@@ -4,31 +4,31 @@ const CHECKPOINT_TEXT = {
   en: {
     launch: {
       label: "Launch",
-      summary: "Orion lifts off aboard SLS from Kennedy Space Center. The four SLS solid rocket boosters produce 7.2 million pounds of thrust. At T+2 min the solid rocket boosters separate, completing the first phase of ascent.",
+      summary: "Orion Spaceship lifts off aboard SLS from Kennedy Space Center. The four SLS solid rocket boosters produce 7.2 million pounds of thrust. At T+2 min the solid rocket boosters separate, completing the first phase of ascent.",
     },
     "meco-staging": {
       label: "MECO & Stage Separation",
-      summary: "Main Engine Cutoff (MECO) at T+8 min. The SLS core stage separates at ~160 km altitude. Orion is travelling at 28,160 km/h. The ICPS (Interim Cryogenic Propulsion Stage) takes over for the next burn.",
+      summary: "Main Engine Cutoff (MECO) at T+8 min. The SLS core stage separates at ~160 km altitude. Orion Spaceship is travelling at 28,160 km/h. The ICPS (Interim Cryogenic Propulsion Stage) takes over for the next burn.",
     },
     "spacecraft-separation": {
-      label: "Orion Spacecraft Separation",
-      summary: "Orion separates from the ICPS at T+~35 min. Solar arrays fully deploy. The spacecraft is now autonomous in the 43,730 × 185 km high-Earth elliptical parking orbit. Crew begins initial system health checks.",
+      label: "Orion Spaceship Separation",
+      summary: "Orion Spaceship separates from the ICPS at T+~35 min. Solar arrays fully deploy. The spacecraft is now autonomous in the 43,730 × 185 km high-Earth elliptical parking orbit. Crew begins initial system health checks.",
     },
     "high-earth-checkout": {
       label: "High Earth Orbit Checkout",
-      summary: "Over about 20 hours in the high elliptical parking orbit (185 × 70,375 km), the crew systematically verifies all Orion systems, including life support, navigation, propulsion, and communications, before committing to the translunar trajectory.",
+      summary: "Over about 20 hours in the high elliptical parking orbit (185 × 70,375 km), the crew systematically verifies all Orion Spaceship systems, including life support, navigation, propulsion, and communications, before committing to the translunar trajectory.",
     },
     tli: {
       label: "Translunar Injection",
-      summary: "A 5 min 51 s ICPS burn (ΔV 388 m/s) sends Orion out of high Earth orbit onto a free-return translunar trajectory. No lunar orbit insertion is needed. The Moon's gravity bends the path and returns the crew to Earth automatically.",
+      summary: "A 5 min 51 s ICPS burn (ΔV 388 m/s) sends Orion Spaceship out of high Earth orbit onto a free-return translunar trajectory. No lunar orbit insertion is needed. The Moon's gravity bends the path and returns the crew to Earth automatically.",
     },
     "lunar-flyby": {
       label: "Lunar Flyby",
-      summary: "Orion reaches its closest approach to the Moon on the hybrid free-return trajectory. The Moon's gravity bends the spacecraft's path back toward Earth without a lunar orbit insertion burn. The crew briefly loses radio contact.",
+      summary: "Orion Spaceship reaches its closest approach to the Moon on the hybrid free-return trajectory. The Moon's gravity bends the spacecraft's path back toward Earth without a lunar orbit insertion burn. The crew briefly loses radio contact.",
     },
     "max-distance": {
       label: "Distance Record",
-      summary: "At 413,174 km from Earth, Orion breaks the human spaceflight distance record set by Apollo 13 in 1970 (400,171 km). The crew is farther from home than any human in history.",
+      summary: "At 413,174 km from Earth, Orion Spaceship breaks the human spaceflight distance record set by Apollo 13 in 1970 (400,171 km). The crew is farther from home than any human in history.",
     },
     "crew-module-sep": {
       label: "Service Module Separation",
@@ -36,41 +36,83 @@ const CHECKPOINT_TEXT = {
     },
     reentry: {
       label: "Atmosphere Re-entry",
-      summary: "Orion hits Earth's atmosphere at 40,000 km/h. The Orion heat shield reaches 2,760 °C, hotter than the surface of the Sun. A skip-entry maneuver reduces peak g-forces and improves Pacific splashdown accuracy.",
+      summary: "Orion Spaceship hits Earth's atmosphere at 40,000 km/h. The Orion Spaceship heat shield reaches 2,760 °C, hotter than the surface of the Sun. A skip-entry maneuver reduces peak g-forces and improves Pacific splashdown accuracy.",
     },
     splashdown: {
       label: "Splashdown",
-      summary: "Drogue chutes deploy at 7.6 km, main chutes at 3 km. Orion splashes down in the Pacific Ocean off San Diego at ~32 km/h, completing a 1.1 million km round trip and the first crewed deep-space mission since Apollo 17.",
+      summary: "Drogue chutes deploy at 7.6 km, main chutes at 3 km. Orion Spaceship splashes down in the Pacific Ocean off San Diego at ~32 km/h, completing a 1.1 million km round trip and the first crewed deep-space mission since Apollo 17.",
+    },
+  },
+  ja: {
+    launch: {
+      label: "打ち上げ",
+      summary: "オリオン宇宙船がSLSでケネディ宇宙センターから打ち上げられました。4基の固体ロケットブースターが720万ポンドの推力を発生させます。T+2分に固体ブースターが分離し、第1段上昇フェーズが完了します。",
+    },
+    "meco-staging": {
+      label: "メインエンジン停止と段間分離",
+      summary: "T+8分にメインエンジン停止（MECO）。SLSコアステージが高度約160kmで分離し、オリオン宇宙船は時速28,160kmで飛行中。次の噴射をICPS（暫定低温推進ステージ）が担います。",
+    },
+    "spacecraft-separation": {
+      label: "オリオン宇宙船分離",
+      summary: "T+約35分でオリオン宇宙船がICPSから分離し、ソーラーパネルが完全展開。43,730×185kmの高楕円駐機軌道に自律投入され、乗組員が初期システムチェックを開始します。",
+    },
+    "high-earth-checkout": {
+      label: "高地球軌道チェックアウト",
+      summary: "高楕円駐機軌道（185×70,375km）での約20時間で、乗組員は生命維持・航法・推進・通信を含む全システムを確認し、月遷移軌道への移行可否を判断します。",
+    },
+    tli: {
+      label: "月遷移噴射",
+      summary: "5分51秒のICPS噴射（ΔV 388m/s）でオリオン宇宙船が高地球軌道を離れ、自由帰還月遷移軌道に投入されます。月軌道挿入は不要で、月の重力が軌跡を自動的に地球へ向けて曲げて帰還させます。",
+    },
+    "lunar-flyby": {
+      label: "月フライバイ",
+      summary: "オリオン宇宙船がハイブリッド自由帰還軌道で月に最接近します。月軌道挿入噴射なしに月の重力が宇宙船の軌跡を地球方向へ曲げます。乗組員は一時的に交信不能となります。",
+    },
+    "max-distance": {
+      label: "距離記録",
+      summary: "地球から413,174kmの地点で、オリオン宇宙船は1970年のアポロ13号が樹立した有人宇宙飛行最遠距離記録（400,171km）を更新します。乗組員は史上最も地球から遠い人類となります。",
+    },
+    "crew-module-sep": {
+      label: "サービスモジュール分離",
+      summary: "欧州サービスモジュール（ESM）が着水約45分前に切り離され、円錐形クルーカプセルだけが地球へ帰還します。ESMは大気圏で燃え尽き、ヒートシールドが再突入に向けて完全に露出します。",
+    },
+    reentry: {
+      label: "大気圏再突入",
+      summary: "オリオン宇宙船が時速40,000kmで大気圏に突入します。ヒートシールドは太陽表面温度を超える2,760℃に達します。スキップエントリーにより最大加速度を抑制し、太平洋着水精度を向上させます。",
+    },
+    splashdown: {
+      label: "着水",
+      summary: "ドローグシュートが高度7.6kmで展開し、メインシュートが3kmで展開。オリオン宇宙船は時速約32kmでサンディエゴ沖の太平洋に着水し、110万kmの往復飛行を完了してアポロ17号以来初の有人深宇宙ミッションが幕を閉じます。",
     },
   },
   "zh-Hant": {
     launch: {
       label: "發射",
-      summary: "獵戶座由 SLS 自甘迺迪太空中心發射升空。四枚固體火箭助推器共提供 720 萬磅推力。發射後約 2 分鐘，固體助推器分離，完成第一階段上升。",
+      summary: "獵戶座太空船由 SLS 自甘迺迪太空中心發射升空。四枚固體火箭助推器共提供 720 萬磅推力。發射後約 2 分鐘，固體助推器分離，完成第一階段上升。",
     },
     "meco-staging": {
       label: "主引擎關機與級間分離",
-      summary: "主引擎關機（MECO）發生在發射後約 8 分鐘。SLS 核心級在約 160 公里高度分離，獵戶座速度約為每小時 28,160 公里。之後由 ICPS 接手下一次點火。",
+      summary: "主引擎關機（MECO）發生在發射後約 8 分鐘。SLS 核心級在約 160 公里高度分離，獵戶座太空船速度約為每小時 28,160 公里。之後由 ICPS 接手下一次點火。",
     },
     "spacecraft-separation": {
-      label: "獵戶座飛船分離",
-      summary: "獵戶座在發射後約 35 分鐘與 ICPS 分離，太陽能板完全展開。太空船此時已自主進入 43,730 × 185 公里的高橢圓停泊軌道，組員開始初步系統健康檢查。",
+      label: "獵戶座太空船分離",
+      summary: "獵戶座太空船在發射後約 35 分鐘與 ICPS 分離，太陽能板完全展開。太空船此時已自主進入 43,730 × 185 公里的高橢圓停泊軌道，組員開始初步系統健康檢查。",
     },
     "high-earth-checkout": {
       label: "高地球軌道檢查",
-      summary: "在約 20 小時的高橢圓停泊軌道（185 × 70,375 公里）期間，組員會系統性檢查獵戶座的生命維持、導航、推進與通訊等系統，再決定是否進入月球轉移軌道。",
+      summary: "在約 20 小時的高橢圓停泊軌道（185 × 70,375 公里）期間，組員會系統性檢查獵戶座太空船的生命維持、導航、推進與通訊等系統，再決定是否進入月球轉移軌道。",
     },
     tli: {
       label: "月球轉移注入",
-      summary: "ICPS 在近地點進行 5 分 51 秒點火（ΔV 388 m/s），讓獵戶座離開高地球軌道，進入自由返回月球轉移軌道。任務不需要月球軌道插入，月球重力會自然彎轉軌跡並帶它回到地球。",
+      summary: "ICPS 在近地點進行 5 分 51 秒點火（ΔV 388 m/s），讓獵戶座太空船離開高地球軌道，進入自由返回月球轉移軌道。任務不需要月球軌道插入，月球重力會自然彎轉軌跡並帶它回到地球。",
     },
     "lunar-flyby": {
       label: "月球飛越",
-      summary: "獵戶座在混合自由返回軌道上到達最接近月球的位置。月球重力會把太空船的路徑彎回地球，而不需要月球軌道插入點火。組員將短暫失去無線電通訊。",
+      summary: "獵戶座太空船在混合自由返回軌道上到達最接近月球的位置。月球重力會把太空船的路徑彎回地球，而不需要月球軌道插入點火。組員將短暫失去無線電通訊。",
     },
     "max-distance": {
       label: "最遠距離紀錄",
-      summary: "當獵戶座距離地球 413,174 公里時，將打破 1970 年阿波羅 13 號創下的載人飛行最遠距離紀錄（400,171 公里）。組員會成為史上離地球最遠的人類。",
+      summary: "當獵戶座太空船距離地球 413,174 公里時，將打破 1970 年阿波羅 13 號創下的載人飛行最遠距離紀錄（400,171 公里）。組員會成為史上離地球最遠的人類。",
     },
     "crew-module-sep": {
       label: "服務艙分離",
@@ -78,11 +120,11 @@ const CHECKPOINT_TEXT = {
     },
     reentry: {
       label: "重返大氣層",
-      summary: "獵戶座以每小時 40,000 公里的速度進入地球大氣層。隔熱罩溫度可達 2,760 °C，比太陽表面還熱。跳躍式再入可降低峰值過載並提高太平洋濺落精度。",
+      summary: "獵戶座太空船以每小時 40,000 公里的速度進入地球大氣層。隔熱罩溫度可達 2,760 °C，比太陽表面還熱。跳躍式再入可降低峰值過載並提高太平洋濺落精度。",
     },
     splashdown: {
       label: "濺落",
-      summary: "減速傘在 7.6 公里高度展開，主傘在 3 公里高度展開。獵戶座以約每小時 32 公里的速度在聖地牙哥外海太平洋濺落，完成約 110 萬公里的往返旅程，以及自阿波羅 17 號後首次載人深空任務。",
+      summary: "減速傘在 7.6 公里高度展開，主傘在 3 公里高度展開。獵戶座太空船以約每小時 32 公里的速度在聖地牙哥外海太平洋濺落，完成約 110 萬公里的往返旅程，以及自阿波羅 17 號後首次載人深空任務。",
     },
   },
 };
@@ -101,15 +143,15 @@ export const TRANSLATIONS = {
     viewerFootnote: "Moon display is visually adjusted to keep the flyby readable.",
     missionSnapshot: "Mission Snapshot",
     metricEarthMoon: "Earth to Moon",
-    metricArtemisEarth: "Orion spacecraft distance from Earth",
-    metricArtemisMoon: "Orion spacecraft distance from Moon",
-    metricSpeed: "Orion spacecraft speed",
+    metricArtemisEarth: "Orion Spaceship distance from Earth",
+    metricArtemisMoon: "Orion Spaceship distance from Moon",
+    metricSpeed: "Orion Spaceship speed",
     missionNodes: "Mission Nodes and Live News",
     liveNews: "Live News",
     openNasa: "Open NASA source",
     upcoming: "Upcoming",
     completed: "Completed",
-    orionStatus: "Orion spacecraft live status",
+    orionStatus: "Orion Spaceship live status",
     missionProgress: "Mission progress",
     timeLabel: "Time",
     distanceEarthLabel: "Distance from Earth",
@@ -119,10 +161,10 @@ export const TRANSLATIONS = {
     trajectoryLoading: "Trajectory: synthetic (loading…)",
     dataUnavailable: "Trajectory: data unavailable",
     trajectoryBadge: ({ orionCount, moonCount, tliRadiusKm, maxBridgeTurnDeg }) =>
-      `Trajectory: NASA JPL HORIZONS · Orion spacecraft ${orionCount} pts · Moon ${moonCount} pts · validated TLI ${tliRadiusKm} km · turn ${maxBridgeTurnDeg} deg`,
+      `Trajectory: NASA JPL HORIZONS · Orion Spaceship ${orionCount} pts · Moon ${moonCount} pts · validated TLI ${tliRadiusKm} km · turn ${maxBridgeTurnDeg} deg`,
     aboutHtml: `
       <h3>Artemis II</h3>
-      <p>Artemis II is the first crewed flight of NASA's SLS rocket and Orion spacecraft. It will be the first human mission into deep space since Apollo 17 in 1972. Four astronauts will verify that the spacecraft works properly in the deep-space environment before Artemis III attempts a lunar landing.</p>
+      <p>Artemis II is the first crewed flight of NASA's SLS rocket and Orion Spaceship. It will be the first human mission into deep space since Apollo 17 in 1972. Four astronauts will verify that the spacecraft works properly in the deep-space environment before Artemis III attempts a lunar landing.</p>
       <h3>Crew</h3>
       <ul>
         <li><strong>Reid Wiseman</strong>: Commander (NASA)</li>
@@ -134,7 +176,7 @@ export const TRANSLATIONS = {
       <a href="./assets/artemis2_map.jpg" target="_blank" rel="noopener noreferrer" class="about-map-link">
         <img src="./assets/artemis2_map.jpg" alt="Artemis II trajectory map" class="about-map">
       </a>
-      <p>After launch from Kennedy Space Center, a Translunar Injection (TLI) burn sends Orion onto a <strong>free-return path</strong>. No lunar-orbit-insertion burn is needed. The Moon's gravity naturally bends the trajectory back to Earth. The orange arc is the path already flown, and the blue arc is the planned route ahead.</p>
+      <p>After launch from Kennedy Space Center, a Translunar Injection (TLI) burn sends Orion Spaceship onto a <strong>free-return path</strong>. No lunar-orbit-insertion burn is needed. The Moon's gravity naturally bends the trajectory back to Earth. The orange arc is the path already flown, and the blue arc is the planned route ahead.</p>
       <h3>Key numbers</h3>
       <ul>
         <li>Max distance from Earth: <strong>406,840 km</strong>, a new human spaceflight record</li>
@@ -145,7 +187,7 @@ export const TRANSLATIONS = {
       </ul>
       <h3>Data sources</h3>
       <ul>
-        <li><strong>Orion trajectory:</strong> <a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA JPL HORIZONS</a>, spacecraft ID&nbsp;-1024, geocentric ICRF, 3&nbsp;h resolution</li>
+        <li><strong>Orion Spaceship trajectory:</strong> <a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA JPL HORIZONS</a>, spacecraft ID&nbsp;-1024, geocentric ICRF, 3&nbsp;h resolution</li>
         <li><strong>Lunar ephemeris:</strong> <a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA JPL HORIZONS</a>, Moon ID&nbsp;301, geocentric ICRF, 3&nbsp;h resolution</li>
         <li><strong>Live mission news:</strong> <a class="detail-link" href="https://www.nasa.gov/missions/artemis/" target="_blank" rel="noreferrer">NASA Artemis news feed</a></li>
         <li><strong>Mission imagery:</strong> <a class="detail-link" href="https://images.nasa.gov" target="_blank" rel="noreferrer">NASA Images API</a></li>
@@ -160,9 +202,9 @@ export const TRANSLATIONS = {
         <p>The scene uses a Y-up right-handed frame. The mapping is:</p>
         $$\\vec{r}_{\\text{scene}} = s\\,\\begin{pmatrix}x_\\text{ICRF}\\\\z_\\text{ICRF}\\\\-y_\\text{ICRF}\\end{pmatrix}, \\quad s = \\frac{D_{\\text{scene}}}{D_{\\text{Moon}}} = \\frac{19.2}{384\\,400} \\approx 4.996\\times10^{-5}$$
         <h3>How trajectory data is obtained</h3>
-        <p>NASA's <a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">JPL HORIZONS</a> system already provides a table of Orion positions. In that system, Orion is body <strong>−1024</strong>. The positions are measured from the center of Earth and sampled every <strong>3 hours</strong>. That gives us 72 points across the full 10-day mission. The app stores that file locally, so it does not need live API calls while you are viewing the tracker.</p>
+        <p>NASA's <a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">JPL HORIZONS</a> system already provides a table of Orion Spaceship positions. In that system, Orion Spaceship is body <strong>−1024</strong>. The positions are measured from the center of Earth and sampled every <strong>3 hours</strong>. That gives us 72 points across the full 10-day mission. The app stores that file locally, so it does not need live API calls while you are viewing the tracker.</p>
         <h3>Orbital mechanics: parking orbit</h3>
-        <p>After MECO Orion enters a <strong>43,730 × 185 km</strong> elliptical orbit. Key parameters (\\(\\mu = 398\\,600\\text{ km}^3\\text{s}^{-2}\\)):</p>
+        <p>After MECO Orion Spaceship enters a <strong>43,730 × 185 km</strong> elliptical orbit. Key parameters (\\(\\mu = 398\\,600\\text{ km}^3\\text{s}^{-2}\\)):</p>
         $$a = \\frac{r_a + r_p}{2} \\approx 28{,}329\\text{ km}$$
         $$e = \\frac{r_a - r_p}{r_a + r_p} \\approx 0.768 \\qquad T \\approx 13.2\\text{ h}$$
         <p>Vis-viva equation gives speed at radius \\(r\\):</p>
@@ -183,17 +225,17 @@ export const TRANSLATIONS = {
         <p>Current validation flow:</p>
         <ol>
           <li><strong>Moon first:</strong> start from raw HORIZONS Moon ephemeris and allow only a small phase correction, checked against sky-observation values and motion direction.</li>
-          <li><strong>Orion second:</strong> keep the Orion trajectory shape, then apply a rigid display fit with rotation and uniform scale so the flyby loop points toward the Moon without locally bending the path.</li>
+          <li><strong>Orion Spaceship second:</strong> keep the Orion Spaceship trajectory shape, then apply a rigid display fit with rotation and uniform scale so the flyby loop points toward the Moon without locally bending the path.</li>
           <li><strong>Constraint report:</strong> compare the result against the flyby geometry checks and print a pass/fail checklist so tuning can be judged numerically instead of by eye alone.</li>
         </ol>
         <p>Current agentic tuning checks:</p>
         <ul>
-          <li><strong>Candidate generation:</strong> the solver tries multiple Moon phase candidates and Orion rigid-fit candidates instead of assuming one hand-picked visual answer.</li>
+          <li><strong>Candidate generation:</strong> the solver tries multiple Moon phase candidates and Orion Spaceship rigid-fit candidates instead of assuming one hand-picked visual answer.</li>
           <li><strong>Observation score:</strong> topocentric RA/Dec, azimuth, altitude, and distance are compared against reference sky values, with a small hour adjustment allowance because date-only Moon snapshots can shift if the observation hour is wrong.</li>
           <li><strong>Motion check:</strong> the displayed Moon must continue moving in the expected top-down direction before flyby.</li>
-          <li><strong>Flyby geometry:</strong> Moon-to-Orion flyby distance, Earth-centered flyby angle, and loop-enclosure behavior are scored together so the flyby stays both readable and physically constrained.</li>
-          <li><strong>Raw-data closeness:</strong> large Moon remaps are penalized so the Moon stays near the raw ephemeris, while Orion fitting is preferred on the display side.</li>
-          <li><strong>Transform audit:</strong> the Orion rigid fit reports how far it moved from the raw trajectory, and the chosen solution is checked against a printed pass/fail constraint report.</li>
+          <li><strong>Flyby geometry:</strong> Moon-to-Orion Spaceship flyby distance, Earth-centered flyby angle, and loop-enclosure behavior are scored together so the flyby stays both readable and physically constrained.</li>
+          <li><strong>Raw-data closeness:</strong> large Moon remaps are penalized so the Moon stays near the raw ephemeris, while Orion Spaceship fitting is preferred on the display side.</li>
+          <li><strong>Transform audit:</strong> the Orion Spaceship rigid fit reports how far it moved from the raw trajectory, and the chosen solution is checked against a printed pass/fail constraint report.</li>
         </ul>
         <p>This matters because a result can look visually convincing while still failing the physical checks. The app therefore treats the printed constraint report as part of the model, not just a debugging extra.</p>
       </div>
@@ -207,7 +249,7 @@ export const TRANSLATIONS = {
         $$r_\\text{apoapsis} \\approx r_\\text{Moon} = 384{,}400\\text{ km}$$
         <p>Closest lunar approach: <strong>~8,200 km</strong> centre-to-centre.</p>
         <h3>Re-entry: skip manoeuvre</h3>
-        <p>Orion dips into the upper atmosphere at ≈ 121 km, generates lift at its 32° trim angle, skips out, then re-enters. Entry speed ~11 km/s; heat shield to <strong>2,760 °C</strong>; peak deceleration ≈ 4 g.</p>
+        <p>Orion Spaceship dips into the upper atmosphere at ≈ 121 km, generates lift at its 32° trim angle, skips out, then re-enters. Entry speed ~11 km/s; heat shield to <strong>2,760 °C</strong>; peak deceleration ≈ 4 g.</p>
         <h3>Keplerian synthesis solution</h3>
         <p>To recover the missing perigee, the app derives orbital elements directly from the HORIZONS data. No external API is needed:</p>
         <ol>
@@ -238,12 +280,12 @@ export const TRANSLATIONS = {
         <dt>Geocentric</dt><dd>Earth-centred. HORIZONS <code>CENTER=500@399</code> places the coordinate origin at Earth's centre of mass, so all position vectors are measured from Earth.</dd>
         <dt>MECO</dt><dd>Main Engine Cut-Off, the moment the SLS RS-25 core-stage engines shut down, about 8 minutes after launch at about 160 km altitude.</dd>
         <dt>ICPS</dt><dd>Interim Cryogenic Propulsion Stage, the liquid hydrogen/oxygen upper stage of SLS that performs the parking-orbit insertion and TLI burns.</dd>
-        <dt>TLI</dt><dd>Trans-Lunar Injection, the ICPS burn (~388 m/s ΔV, ≈5 min 51 s) that places Orion on a trajectory toward the Moon.</dd>
+        <dt>TLI</dt><dd>Trans-Lunar Injection, the ICPS burn (~388 m/s ΔV, ≈5 min 51 s) that places Orion Spaceship on a trajectory toward the Moon.</dd>
         <dt>ΔV (Delta-V)</dt><dd>The change in velocity produced by a rocket burn, measured in m/s or km/s. Each manoeuvre "costs" ΔV, which must be budgeted against propellant mass.</dd>
         <dt>Vis-viva equation</dt><dd>The fundamental energy equation of orbital mechanics: \\(v^2 = \\mu(2/r - 1/a)\\). Gives speed at any point on a conic orbit from radius \\(r\\) and semi-major axis \\(a\\).</dd>
         <dt>Perigee / Apogee</dt><dd>Closest / farthest point of an Earth orbit. For Artemis II's parking orbit: perigee ≈ 185 km altitude, apogee ≈ 43,730 km altitude.</dd>
         <dt>Free-return trajectory</dt><dd>A lunar trajectory shaped so the spacecraft swings around the Moon and returns to Earth with no additional propulsion. It is used as an abort-safe option for crewed missions.</dd>
-        <dt>ESM</dt><dd>European Service Module, the Airbus-built propulsion, power, and life-support module attached to the Orion crew module. It is jettisoned about 45 minutes before re-entry.</dd>
+        <dt>ESM</dt><dd>European Service Module, the Airbus-built propulsion, power, and life-support module attached to the Orion Spaceship crew module. It is jettisoned about 45 minutes before re-entry.</dd>
         <dt>SLS</dt><dd>Space Launch System, NASA's heavy-lift vehicle producing 39.1 MN (8.8 million lbf) at liftoff, the most powerful rocket ever to fly.</dd>
         <dt>Skip entry</dt><dd>A re-entry technique where the vehicle briefly "skips" off the upper atmosphere, generating lift to control the landing footprint and limit peak g-forces before final re-entry.</dd>
         <dt>NAIF / SPICE</dt><dd>Navigation and Ancillary Information Facility, the NASA JPL group that maintains the SPICE toolkit for spacecraft geometry. HORIZONS uses NAIF body IDs (Artemis II = -1024, Moon = 301, Earth = 399).</dd>
@@ -300,7 +342,7 @@ export const TRANSLATIONS = {
       <a href="./assets/artemis2_map.jpg" target="_blank" rel="noopener noreferrer" class="about-map-link">
         <img src="./assets/artemis2_map.jpg" alt="Artemis II trajectory map" class="about-map">
       </a>
-      <p>從甘迺迪太空中心發射後，月球轉移注入（TLI）點火會把獵戶座送入<strong>自由返回軌道</strong>。任務不需要月球軌道插入點火，月球重力會自然把軌跡彎回地球。橘色弧線是已飛行路徑，藍色弧線是後續規劃路徑。</p>
+      <p>從甘迺迪太空中心發射後，月球轉移注入（TLI）點火會把獵戶座太空船送入<strong>自由返回軌道</strong>。任務不需要月球軌道插入點火，月球重力會自然把軌跡彎回地球。橘色弧線是已飛行路徑，藍色弧線是後續規劃路徑。</p>
       <h3>關鍵數字</h3>
       <ul>
         <li>距離地球最遠：<strong>406,840 km</strong>，新的載人飛行紀錄</li>
@@ -311,7 +353,7 @@ export const TRANSLATIONS = {
       </ul>
       <h3>資料來源</h3>
       <ul>
-        <li><strong>獵戶座軌跡：</strong><a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA JPL HORIZONS</a>，太空船 ID&nbsp;-1024，地心 ICRF，3&nbsp;小時解析度</li>
+        <li><strong>獵戶座太空船軌跡：</strong><a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA JPL HORIZONS</a>，太空船 ID&nbsp;-1024，地心 ICRF，3&nbsp;小時解析度</li>
         <li><strong>月球星曆：</strong><a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA JPL HORIZONS</a>，月球 ID&nbsp;301，地心 ICRF，3&nbsp;小時解析度</li>
         <li><strong>即時任務新聞：</strong><a class="detail-link" href="https://www.nasa.gov/missions/artemis/" target="_blank" rel="noreferrer">NASA Artemis 新聞摘要</a></li>
         <li><strong>任務影像：</strong><a class="detail-link" href="https://images.nasa.gov" target="_blank" rel="noreferrer">NASA Images API</a></li>
@@ -326,9 +368,9 @@ export const TRANSLATIONS = {
         <p>場景使用 Y 向上的右手座標系，轉換方式為：</p>
         $$\\vec{r}_{\\text{scene}} = s\\,\\begin{pmatrix}x_\\text{ICRF}\\\\z_\\text{ICRF}\\\\-y_\\text{ICRF}\\end{pmatrix}, \\quad s = \\frac{D_{\\text{scene}}}{D_{\\text{Moon}}} = \\frac{19.2}{384\\,400} \\approx 4.996\\times10^{-5}$$
         <h3>軌跡資料如何取得</h3>
-        <p><a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">JPL HORIZONS</a> 已經提供獵戶座位置資料表。在該系統中，獵戶座的天體代號是 <strong>−1024</strong>。位置以地球中心為原點，每 <strong>3 小時</strong> 取樣一次，因此整個 10 天任務共有 72 個資料點。應用程式會把這份資料檔案本地打包，所以瀏覽時不需要即時 API 呼叫。</p>
+        <p><a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">JPL HORIZONS</a> 已經提供獵戶座太空船位置資料表。在該系統中，獵戶座太空船的天體代號是 <strong>−1024</strong>。位置以地球中心為原點，每 <strong>3 小時</strong> 取樣一次，因此整個 10 天任務共有 72 個資料點。應用程式會把這份資料檔案本地打包，所以瀏覽時不需要即時 API 呼叫。</p>
         <h3>軌道力學：停泊軌道</h3>
-        <p>在 MECO 之後，獵戶座進入 <strong>43,730 × 185 km</strong> 的橢圓停泊軌道。主要參數（\\(\\mu = 398\\,600\\text{ km}^3\\text{s}^{-2}\\)）為：</p>
+        <p>在 MECO 之後，獵戶座太空船進入 <strong>43,730 × 185 km</strong> 的橢圓停泊軌道。主要參數（\\(\\mu = 398\\,600\\text{ km}^3\\text{s}^{-2}\\)）為：</p>
         $$a = \\frac{r_a + r_p}{2} \\approx 28{,}329\\text{ km}$$
         $$e = \\frac{r_a - r_p}{r_a + r_p} \\approx 0.768 \\qquad T \\approx 13.2\\text{ h}$$
         <p>Vis-viva 方程可給出半徑 \\(r\\) 處的速度：</p>
@@ -349,17 +391,17 @@ export const TRANSLATIONS = {
         <p>目前的驗證流程：</p>
         <ol>
           <li><strong>先處理月球：</strong>從原始 HORIZONS 月球星曆出發，只允許小幅相位修正，並用星圖觀測值與運動方向檢查。</li>
-          <li><strong>再處理獵戶座：</strong>盡量保留獵戶座軌跡形狀，再用剛體顯示擬合，也就是旋轉加上等比例縮放，讓飛越環繞更接近月球，而不是局部硬彎軌跡。</li>
+          <li><strong>再處理獵戶座太空船：</strong>盡量保留獵戶座太空船軌跡形狀，再用剛體顯示擬合，也就是旋轉加上等比例縮放，讓飛越環繞更接近月球，而不是局部硬彎軌跡。</li>
           <li><strong>輸出約束報告：</strong>把結果和飛越幾何約束逐項比對，輸出 pass/fail 清單，讓調整不是只靠肉眼判斷。</li>
         </ol>
         <p>目前代理式微調的檢查項目包括：</p>
         <ul>
-          <li><strong>候選解生成：</strong>求解器會測試多組月球相位候選與獵戶座剛體擬合候選，而不是直接假設一個手動指定的視覺答案。</li>
+          <li><strong>候選解生成：</strong>求解器會測試多組月球相位候選與獵戶座太空船剛體擬合候選，而不是直接假設一個手動指定的視覺答案。</li>
           <li><strong>觀測評分：</strong>把飛越前後的參考天象觀測值，拿來比對地面觀測的赤經／赤緯、方位角、高度角與距離。因為如果只知道日期、不知道觀測小時，月球位置可能偏移，所以也會保留小幅的小時調整空間。</li>
           <li><strong>運動檢查：</strong>顯示出的月球在飛越前，必須維持預期的俯視運動方向。</li>
-          <li><strong>飛越幾何：</strong>月球與獵戶座的飛越距離、地心飛越角度，以及飛越環對月球的包絡關係會一起評分，讓畫面同時兼顧可讀性與物理約束。</li>
-          <li><strong>接近原始資料：</strong>如果月球顯示偏離原始星曆太多，就會被扣分，因此會優先把顯示調整放在獵戶座那一側。</li>
-          <li><strong>轉換量稽核：</strong>獵戶座剛體擬合後，會回報它偏離原始軌跡多少，並搭配輸出的 pass/fail 約束報告，方便判斷這個顯示修正是否仍然合理。</li>
+          <li><strong>飛越幾何：</strong>月球與獵戶座太空船的飛越距離、地心飛越角度，以及飛越環對月球的包絡關係會一起評分，讓畫面同時兼顧可讀性與物理約束。</li>
+          <li><strong>接近原始資料：</strong>如果月球顯示偏離原始星曆太多，就會被扣分，因此會優先把顯示調整放在獵戶座太空船那一側。</li>
+          <li><strong>轉換量稽核：</strong>獵戶座太空船剛體擬合後，會回報它偏離原始軌跡多少，並搭配輸出的 pass/fail 約束報告，方便判斷這個顯示修正是否仍然合理。</li>
         </ul>
         <p>這一點很重要，因為有些結果看起來順眼，實際上卻可能違反物理條件。所以這裡會把輸出的約束報告視為模型的一部分，而不是單純的除錯資訊。</p>
       </div>
@@ -373,7 +415,7 @@ export const TRANSLATIONS = {
         $$r_\\text{apoapsis} \\approx r_\\text{Moon} = 384{,}400\\text{ km}$$
         <p>最近月球距離：約為 <strong>8,200 km</strong>（中心到中心）。</p>
         <h3>再入：跳躍式再入</h3>
-        <p>獵戶座會在約 121 km 高度切入上層大氣，利用 32° 配平角產生升力，先短暫跳出再重新進入。再入速度約 11 km/s；隔熱罩溫度可達 <strong>2,760 °C</strong>；最大減速度約 4 g。</p>
+        <p>獵戶座太空船會在約 121 km 高度切入上層大氣，利用 32° 配平角產生升力，先短暫跳出再重新進入。再入速度約 11 km/s；隔熱罩溫度可達 <strong>2,760 °C</strong>；最大減速度約 4 g。</p>
         <h3>克卜勒合成解法</h3>
         <p>為了補回缺失的近地點，程式直接從 HORIZONS 資料推導軌道要素，不需要外部 API：</p>
         <ol>
@@ -404,12 +446,12 @@ export const TRANSLATIONS = {
         <dt>Geocentric</dt><dd>地心座標。HORIZONS 的 <code>CENTER=500@399</code> 代表座標原點在地球質心，所以所有位置向量都是從地球量起。</dd>
         <dt>MECO</dt><dd>Main Engine Cut-Off，指 SLS RS-25 核心級引擎關機的時刻，約在發射後 8 分鐘、高度約 160 km。</dd>
         <dt>ICPS</dt><dd>Interim Cryogenic Propulsion Stage，是 SLS 的液氫／液氧上面級，負責停泊軌道插入與 TLI 點火。</dd>
-        <dt>TLI</dt><dd>Trans-Lunar Injection，即月球轉移注入，是 ICPS 的一次點火（約 388 m/s ΔV，約 5 分 51 秒），把獵戶座送上前往月球的軌道。</dd>
+        <dt>TLI</dt><dd>Trans-Lunar Injection，即月球轉移注入，是 ICPS 的一次點火（約 388 m/s ΔV，約 5 分 51 秒），把獵戶座太空船送上前往月球的軌道。</dd>
         <dt>ΔV (Delta-V)</dt><dd>火箭點火產生的速度變化，單位通常是 m/s 或 km/s。每次機動都要消耗 ΔV，因此必須和推進劑預算一起考慮。</dd>
         <dt>Vis-viva equation</dt><dd>軌道力學中的基本能量方程：\\(v^2 = \\mu(2/r - 1/a)\\)。它可用半徑 \\(r\\) 與半長軸 \\(a\\) 算出圓錐曲線上任一點的速度。</dd>
         <dt>Perigee / Apogee</dt><dd>地球軌道上的最近點與最遠點。阿提米絲二號停泊軌道的近地點約 185 km 高度，遠地點約 43,730 km 高度。</dd>
         <dt>Free-return trajectory</dt><dd>一種月球軌道設計，讓太空船繞過月球後在不追加推進的情況下回到地球，常作為載人任務的安全中止方案。</dd>
-        <dt>ESM</dt><dd>European Service Module，歐洲服務艙，由 Airbus 製造，負責獵戶座的推進、電力與生命維持，在再入前約 45 分鐘拋棄。</dd>
+        <dt>ESM</dt><dd>European Service Module，歐洲服務艙，由 Airbus 製造，負責獵戶座太空船的推進、電力與生命維持，在再入前約 45 分鐘拋棄。</dd>
         <dt>SLS</dt><dd>Space Launch System，NASA 的重型運載火箭，起飛推力達 39.1 MN（880 萬磅），是有史以來推力最大的現役火箭之一。</dd>
         <dt>Skip entry</dt><dd>一種再入技術，讓太空船短暫「彈跳」出上層大氣，利用升力控制降落範圍並限制峰值過載，再進行最後再入。</dd>
         <dt>NAIF / SPICE</dt><dd>Navigation and Ancillary Information Facility，是 NASA JPL 維護 SPICE 幾何工具組的團隊。HORIZONS 使用 NAIF 天體代號（Artemis II = -1024，Moon = 301，Earth = 399）。</dd>
@@ -420,10 +462,176 @@ export const TRANSLATIONS = {
       </p>
     `,
   },
+  "ja": {
+    languageName: "日本語",
+    pageTitle: "アルテミスフライトトラッカー",
+    topEyebrow: "ライブミッションビュー",
+    title: "アルテミスフライトトラッカー",
+    aboutButton: "概要",
+    techButton: "技術メモ",
+    termsButton: "用語集",
+    languageLabel: "言語",
+    fitScreen: "画面に合わせる",
+    viewerFootnote: "月の表示はフライバイの視認性向上のため視覚調整済みです。",
+    missionSnapshot: "ミッション概要",
+    metricEarthMoon: "地球から月まで",
+    metricArtemisEarth: "オリオン宇宙船の地球からの距離",
+    metricArtemisMoon: "オリオン宇宙船の月からの距離",
+    metricSpeed: "オリオン宇宙船の速度",
+    missionNodes: "ミッションノードとライブニュース",
+    liveNews: "ライブニュース",
+    openNasa: "NASAソースを開く",
+    upcoming: "予定",
+    completed: "完了",
+    orionStatus: "オリオン宇宙船ライブ状態",
+    missionProgress: "ミッション進捗",
+    timeLabel: "時刻",
+    distanceEarthLabel: "地球からの距離",
+    distanceMoonLabel: "月からの距離",
+    speedLabel: "速度",
+    loading: "読み込み中",
+    trajectoryLoading: "軌道：合成中（読み込み中…）",
+    dataUnavailable: "軌道：データ利用不可",
+    trajectoryBadge: ({ orionCount, moonCount, tliRadiusKm, maxBridgeTurnDeg }) =>
+      `軌道：NASA JPL HORIZONS · オリオン宇宙船 ${orionCount}点 · 月 ${moonCount}点 · 検証済みTLI ${tliRadiusKm} km · 旋回 ${maxBridgeTurnDeg}°`,
+    aboutHtml: `
+    <h3>アルテミスII</h3>
+    <p>アルテミスIIはNASAのSLSロケットとオリオン宇宙船による初の有人飛行です。1972年のアポロ17号以来、初の有人深宇宙ミッションとなります。4名の宇宙飛行士が深宇宙環境での宇宙船の動作を検証し、アルテミスIIIの月面着陸に備えます。</p>
+    <h3>乗組員</h3>
+    <ul>
+      <li><strong>Reid Wiseman</strong>：船長（NASA）</li>
+      <li><strong>Victor Glover</strong>：パイロット（NASA）</li>
+      <li><strong>Christina Koch</strong>：ミッションスペシャリスト（NASA）</li>
+      <li><strong>Jeremy Hansen</strong>：ミッションスペシャリスト（CSA）</li>
+    </ul>
+    <h3>自由帰還軌道</h3>
+    <a href="./assets/artemis2_map.jpg" target="_blank" rel="noopener noreferrer" class="about-map-link">
+      <img src="./assets/artemis2_map.jpg" alt="Artemis II trajectory map" class="about-map">
+    </a>
+    <p>ケネディ宇宙センターから打ち上げ後、月遷移噴射（TLI）によりオリオン宇宙船は<strong>自由帰還軌道</strong>に投入されます。月軌道挿入噴射は不要で、月の重力が自然に軌跡を地球へと曲げて帰還させます。オレンジの弧が飛行済みの軌跡、青の弧が前方の計画ルートです。</p>
+    <h3>主要諸元</h3>
+    <ul>
+      <li>地球からの最大距離：<strong>406,840 km</strong>（有人宇宙飛行新記録）</li>
+      <li>月への最接近距離：月面上<strong>約6,500 km</strong></li>
+      <li>総飛行距離：<strong>約110万km</strong></li>
+      <li>ミッション期間：<strong>約10日間</strong></li>
+      <li>大気圏突入速度：<strong>約40,000 km/h</strong>、ヒートシールドは2,760℃に達する</li>
+    </ul>
+    <h3>データソース</h3>
+    <ul>
+      <li><strong>オリオン宇宙船軌道：</strong><a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA JPL HORIZONS</a>、宇宙船ID&nbsp;-1024、地心ICRF、3時間分解能</li>
+      <li><strong>月暦：</strong><a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA JPL HORIZONS</a>、月ID&nbsp;301、地心ICRF、3時間分解能</li>
+      <li><strong>ライブミッションニュース：</strong><a class="detail-link" href="https://www.nasa.gov/missions/artemis/" target="_blank" rel="noreferrer">NASA Artemisニュースフィード</a></li>
+      <li><strong>ミッション画像：</strong><a class="detail-link" href="https://images.nasa.gov" target="_blank" rel="noreferrer">NASA Images API</a></li>
+    </ul>
+    <p class="about-note">軌道は打ち上げ前のHORIZONS計画データ（3時間ステップ）です。実際の月最接近距離（約8,200km）はデータポイントの間に位置します。チェックポイント時刻はNASAミッション計画文書によります。</p>
+    <p class="about-note" style="margin-top:8px"><a class="detail-link" href="https://github.com/jackyko1991/space-track" target="_blank" rel="noreferrer">開発者ドキュメント＆ソースコード →</a></p>
+  `,
+    techHtml: `
+    <div class="tech-col">
+      <h3>座標系とデータパイプライン</h3>
+      <p>軌道データは<a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA JPL HORIZONS</a>の<strong>ICRF地心J2000</strong>フレームから取得しています：X軸は春分点方向、Z軸は北天極方向。</p>
+      <p>シーンはYアップ右手座標系を使用します。変換式：</p>
+      $$\\vec{r}_{\\text{scene}} = s\\,\\begin{pmatrix}x_\\text{ICRF}\\\\z_\\text{ICRF}\\\\-y_\\text{ICRF}\\end{pmatrix}, \\quad s = \\frac{D_{\\text{scene}}}{D_{\\text{Moon}}} = \\frac{19.2}{384\\,400} \\approx 4.996\\times10^{-5}$$
+      <h3>軌道データの取得方法</h3>
+      <p>NASAの<a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">JPL HORIZONS</a>システムはオリオン宇宙船の位置データテーブルを提供しています。システム内でオリオン宇宙船の天体番号は<strong>−1024</strong>です。位置は地球中心を原点として<strong>3時間</strong>ごとにサンプリングされ、10日間のミッション全体で72点のデータが得られます。アプリはこのファイルをローカルに保存しているため、ビューア使用中にライブAPIを呼び出す必要はありません。</p>
+      <h3>軌道力学：駐機軌道</h3>
+      <p>MECO後、オリオン宇宙船は<strong>43,730×185km</strong>の楕円駐機軌道に投入されます。主要パラメータ（\\(\\mu = 398\\,600\\text{ km}^3\\text{s}^{-2}\\)）：</p>
+      $$a = \\frac{r_a + r_p}{2} \\approx 28{,}329\\text{ km}$$
+      $$e = \\frac{r_a - r_p}{r_a + r_p} \\approx 0.768 \\qquad T \\approx 13.2\\text{ h}$$
+      <p>vis-viva方程式により半径\\(r\\)での速度：</p>
+      $$v = \\sqrt{\\mu\\!\\left(\\tfrac{2}{r} - \\tfrac{1}{a}\\right)}$$
+      <h3>HORIZONSデータギャップと合成アーク</h3>
+      <p>3時間ステップでは、HORIZONSは駐機軌道全体で<strong>8点</strong>（T+3.4h〜T+24.4h）しか返しません。ICPSが\\(r_p = 6{,}556\\text{ km}\\)でTLI噴射を行う第2近地点は、連続するデータポイントの<em>間</em>に位置しています：</p>
+      <table class="tech-table">
+        <tr><th>ポイント</th><th>r (km)</th><th>ミッション時刻</th></tr>
+        <tr><td>idx&nbsp;7</td><td>19,087</td><td>T + 24.4 h</td></tr>
+        <tr><td><em>TLI近地点</em></td><td><em>6,556</em></td><td><em>T + 25.1 h（欠落）</em></td></tr>
+        <tr><td>idx&nbsp;8</td><td>40,839</td><td>T + 27.4 h</td></tr>
+      </table>
+      <p>idx 7とidx 8の間を単純補間すると、経路は19,087km以下に下がりません。これではTLIノードが近地点付近ではなく地球のはるか上空に浮かんでいるように見えてしまいます。</p>
+      <h3>月整合ノート</h3>
+      <p>月の表示は視認性向上のため視覚調整されています。アプリは生のHORIZONS月暦から始め、観測ベースの天空値に近い状態を維持しながら、フライバイの視認性を確保するため小さな位相補正のみを適用します。目標は視覚的に誤解を招くフライバイのずれを避けながら、実際の月の動きにできる限り忠実であることです。</p>
+      <h3>制約誘導型エージェントチューニング</h3>
+      <p>現在のレンダリングは<strong>制約誘導型エージェントチューニング</strong>アプローチを採用しています。簡単に言うと、コードは候補となる表示変換をテストし、物理的・観測的制約と照合してメトリクスを出力し、全体として理にかなったソリューションのみを採用します。</p>
+      <p>現在の検証フロー：</p>
+      <ol>
+        <li><strong>月を先に処理：</strong>生のHORIZONS月暦から始め、天空観測値と運動方向で検証しながら小さな位相補正のみを許可します。</li>
+        <li><strong>次にオリオン宇宙船を処理：</strong>オリオン宇宙船の軌道形状を維持しつつ、フライバイループが軌道を局所的に曲げずに月方向を向くよう剛体表示フィットを適用します。</li>
+        <li><strong>制約レポート：</strong>フライバイ幾何制約と結果を照合し、目視だけでなく数値的に評価できるpass/failチェックリストを出力します。</li>
+      </ol>
+      <p>現在のエージェントチューニングチェック：</p>
+      <ul>
+        <li><strong>候補生成：</strong>ソルバーは一つの手動指定ビジュアル解を仮定するのではなく、複数の月位相候補とオリオン宇宙船剛体フィット候補を試みます。</li>
+        <li><strong>観測スコア：</strong>地心赤経/赤緯、方位角、高度、距離を基準天空値と比較します。日付のみの月スナップショットは観測時刻によってずれる可能性があるため、小さな時刻調整余裕を持たせています。</li>
+        <li><strong>運動チェック：</strong>表示された月はフライバイ前に予期される上から見た方向に動き続ける必要があります。</li>
+        <li><strong>フライバイ幾何：</strong>月とオリオン宇宙船のフライバイ距離、地心フライバイ角度、ループ包絡挙動を合わせてスコアリングし、フライバイの視認性と物理的制約を両立させます。</li>
+        <li><strong>生データとの近さ：</strong>月の大きなリマップにはペナルティが課されるため、表示調整はオリオン宇宙船側が優先されます。</li>
+        <li><strong>変換監査：</strong>オリオン宇宙船剛体フィットは生軌道からのずれを報告し、選択されたソリューションはpass/fail制約レポートで検証されます。</li>
+      </ul>
+      <p>これは視覚的に説得力があるように見えながら物理チェックに失敗する結果があり得るため重要です。アプリは出力された制約レポートを単なるデバッグ情報ではなくモデルの一部として扱います。</p>
+    </div>
+    <div class="tech-col">
+      <h3>月遷移噴射（TLI）</h3>
+      <p>TLIは近地点での順行ICPS噴射です。自由帰還軌道に必要な\\(\\Delta v\\)：</p>
+      $$\\Delta v_\\text{TLI} \\approx \\sqrt{\\mu\\!\\left(\\tfrac{2}{r_p} - \\tfrac{1}{a_\\text{TLI}}\\right)} - \\sqrt{\\tfrac{\\mu}{r_p}} \\approx 0.388\\text{ km/s}$$
+      <p>結果として得られる円錐曲線の遠地点は約413,174kmで、有人宇宙飛行の新記録となります。</p>
+      <h3>自由帰還軌道</h3>
+      <p><strong>8の字型</strong>円錐曲線です。月の重力が速度ベクトルを回転させ、大型追加噴射なしに宇宙船が地球へ帰還します。近似条件：</p>
+      $$r_\\text{apoapsis} \\approx r_\\text{Moon} = 384{,}400\\text{ km}$$
+      <p>月への最接近距離：<strong>約8,200km</strong>（中心間）。</p>
+      <h3>再突入：スキップマヌーバ</h3>
+      <p>オリオン宇宙船は高度約121kmで上層大気に進入し、32°トリム角で揚力を発生させて一度スキップアウトしてから再突入します。突入速度約11km/s、ヒートシールドは<strong>2,760℃</strong>、最大減速度約4g。</p>
+      <h3>ケプラー合成解法</h3>
+      <p>欠落した近地点を補完するため、アプリはHORIZONSデータから直接軌道要素を導出します。外部APIは不要です：</p>
+      <ol>
+        <li><strong>軌道面</strong>：最初の2データポイントから\\(\\hat{h} = \\vec{r}_0 \\times \\vec{r}_1\\)</li>
+        <li><strong>遠地点</strong>：TLI前の最大半径点 → \\(r_a\\)、\\(\\hat{r}_a\\)</li>
+        <li><strong>軌道要素</strong>：\\(a = (r_a + r_p)/2\\)、\\(e = (r_a - r_p)/(r_a + r_p)\\)、\\(T = 2\\pi\\sqrt{a^3/\\mu}\\)</li>
+        <li><strong>位相</strong>：最初のデータポイントでの真近点角\\(\\nu_0\\)から第1近地点時刻\\(t_{\\pi_1}\\)を逆算</li>
+      </ol>
+      <p>次に20分ステップで<strong>ニュートン–ラフソン</strong>法によりケプラー方程式を解きます：</p>
+      $$M = E - e\\sin E \\quad\\Longrightarrow\\quad E_{n+1} = E_n + \\frac{M - E_n + e\\sin E_n}{1 - e\\cos E_n}$$
+      <p>これにより第1近地点から遠地点を経てTLI第2近地点まで、3時間データギャップを±9分以内の誤差で埋める滑らかで物理的に正確なアークが生成されます。その後、接線マッチングされた外向きブリッジが合成近地点を40,839kmの最初のTLI後HORIZONSポイントに接続し、地球からの旋回を滑らかに保ちます。</p>
+      <p>大きな傾きが見えても必ずしも非現実的ではありません。実際の太陽系では月の軌道は地球公転面に対して約<strong>5°</strong>傾いており、地球の自転軸も約<strong>23.4°</strong>傾いています。視点によっては月の経路が地球赤道に対して大きく傾いて見えます。</p>
+      <h3>スプラインレンダリング</h3>
+      <p>TLI後の外向き区間は<strong>centripetal Catmull–Rom</strong>（\\(\\alpha=0.5\\)）を使用し、帰還区間は<strong>chordal</strong>（\\(\\alpha=1\\)）を使用して最終アプローチで地球の後ろを通るスプラインを防ぎます。</p>
+      <h3>参考文献</h3>
+      <ul>
+        <li><a class="detail-link" href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA JPL HORIZONS</a></li>
+        <li><a class="detail-link" href="https://svs.gsfc.nasa.gov/5610/" target="_blank" rel="noreferrer">NASA SVS、Artemis II可視化</a></li>
+        <li><a class="detail-link" href="https://www.nasa.gov/mission/artemis-ii/" target="_blank" rel="noreferrer">NASA Artemis IIミッションページ</a></li>
+        <li>Bate、Mueller、White、<em>Fundamentals of Astrodynamics</em>、Dover 1971</li>
+      </ul>
+    </div>
+  `,
+    termsHtml: `
+    <dl class="terms-list">
+      <dt>ICRF</dt><dd>国際天球参照フレーム（International Celestial Reference Frame）。遠方のクエーサーで定義された宇宙航法の標準慣性（非回転）基準フレームです。全HORIZONSベクトルデータはICRFで提供されます。</dd>
+      <dt>J2000</dt><dd>ユリウス暦元期2000.0（2000年1月1日12:00 TDB）。ICRFの軸方向を定義します：X軸は春分点方向、Z軸は北天極方向。</dd>
+      <dt>Geocentric（地心）</dt><dd>地球中心座標。HORIZONSの<code>CENTER=500@399</code>は座標原点を地球質量中心に置くため、全位置ベクトルは地球から測定されます。</dd>
+      <dt>MECO</dt><dd>メインエンジン停止（Main Engine Cut-Off）。SLS RS-25コアステージエンジンが停止する時刻で、打ち上げ後約8分・高度約160km。</dd>
+      <dt>ICPS</dt><dd>暫定低温推進ステージ（Interim Cryogenic Propulsion Stage）。SLSの液体水素/酸素上段で、駐機軌道挿入とTLI噴射を担当します。</dd>
+      <dt>TLI</dt><dd>月遷移噴射（Trans-Lunar Injection）。ICPSの噴射（約388m/s ΔV、約5分51秒）でオリオン宇宙船を月へ向かう軌道に投入します。</dd>
+      <dt>ΔV（デルタV）</dt><dd>ロケット噴射による速度変化量で、単位はm/sまたはkm/s。各マヌーバはΔVを「消費」するため推進剤残量と合わせて計画する必要があります。</dd>
+      <dt>vis-viva方程式</dt><dd>軌道力学の基本エネルギー方程式：\\(v^2 = \\mu(2/r - 1/a)\\)。半径\\(r\\)と半長軸\\(a\\)から円錐軌道上の任意の点での速度が求まります。</dd>
+      <dt>近地点 / 遠地点</dt><dd>地球軌道の最近点/最遠点。アルテミスIIの駐機軌道：近地点高度約185km、遠地点高度約43,730km。</dd>
+      <dt>自由帰還軌道</dt><dd>宇宙船が月を周回して追加推進なしに地球へ帰還できるよう設計された月遷移軌道。有人ミッションの緊急中断オプションとして使用されます。</dd>
+      <dt>ESM</dt><dd>欧州サービスモジュール（European Service Module）。Airbus製で、オリオン宇宙船のクルーモジュールに取り付けられた推進・電力・生命維持モジュールです。再突入約45分前に切り離されます。</dd>
+      <dt>SLS</dt><dd>宇宙打ち上げシステム（Space Launch System）。NASAの大型ロケットで離昇推力39.1MN（880万ポンド）を発生させます。</dd>
+      <dt>スキップエントリー</dt><dd>機体が上層大気を一度「スキップ」して揚力で着地地点を制御しながら最大加速度負荷を抑制してから最終再突入を行う技術です。</dd>
+      <dt>NAIF / SPICE</dt><dd>NASA JPLが宇宙機幾何ツールキットSPICEを維持するNAIF（Navigation and Ancillary Information Facility）チーム。HORIZONSはNAIF天体IDを使用します（Artemis II = -1024、Moon = 301、Earth = 399）。</dd>
+      <dt>Catmull–Romスプライン</dt><dd>離散HORIZONSデータポイントを通して連続した軌道チューブをレンダリングするために使用する滑らかな補間スプライン。Centripetal parameterisation（α = 0.5）はカスプを防ぎ、chordal（α = 1）はデータポイントを最も忠実に追従します。</dd>
+    </dl>
+    <p class="about-note" style="margin-top:12px">
+      アプリ開発メモとビルド手順：<a class="detail-link" href="https://github.com/jackyko1991/space-track" target="_blank" rel="noreferrer">GitHubリポジトリ →</a>
+    </p>
+  `,
+  },
 };
 
 export function getSupportedLanguages() {
-  return ["en", "zh-Hant"];
+  return ["en", "zh-Hant", "ja"];
 }
 
 export function getInitialLanguage() {
